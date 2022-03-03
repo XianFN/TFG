@@ -6,6 +6,7 @@ from keras import layers
 from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
+import statistics
 
 import MasCarreras
 import Preprocess
@@ -22,8 +23,22 @@ print(Data["UltimaCarrera"].value_counts()[0:10])
 
 print(Data.shape)
 
+AllAccuracy = []
+
+for x in range(0, 5):
+    AllAccuracy.append(Informatica.TestModel(Data))
+    #AllAccuracy.append(MasCarreras.TestModel(Data))
 
 
-Informatica.TestModel(Data)
+print(AllAccuracy)
+print(statistics.mean(AllAccuracy))
+#Informatica.TestModel(Data)
 #MasCarreras.TestModel(Data)
 
+#DATOS
+''''
+Informatica, best: 0.8827956914901733
+
+
+
+'''

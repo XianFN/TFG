@@ -52,6 +52,14 @@ def TestModel(Data):
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
+        layers.Dense(200),
+        layers.Activation('relu'),
+        layers.Dropout(0.3),
+        layers.BatchNormalization(),
+        layers.Dense(200),
+        layers.Activation('relu'),
+        layers.Dropout(0.3),
+        layers.BatchNormalization(),
         # layers.Dense(1, activation='softmax'),
         layers.Dense(1, activation='sigmoid'),
     ])
@@ -66,7 +74,7 @@ def TestModel(Data):
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=0.01),
+            learning_rate=0.001),
             loss='binary_crossentropy',
             metrics=['binary_accuracy'],
         #loss='categorical_crossentropy',
@@ -102,3 +110,5 @@ def TestModel(Data):
     score = model.evaluate(X_test, y_test, verbose=0)
     print("Test loss:", score[0])
     print("Test accuracy:", score[1])
+
+    return score[1]
