@@ -7,7 +7,9 @@ from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 
+import MasCarreras
 import Preprocess
+import Informatica
 
 print("Hola")
 
@@ -15,146 +17,13 @@ Data = pd.read_csv('DataSet/DATATEST-2.csv')
 
 Data = Preprocess.hola(Data)
 
-print(Data["UltimaCarrera"].value_counts())
+print(Data["UltimaCarrera"].value_counts()[0:10])
 
 
 print(Data.shape)
 
-X_train = Data.sample(frac=0.75, random_state=200)
 
 
-X_test = Data.drop(X_train.index)
+Informatica.TestModel(Data)
+#MasCarreras.TestModel(Data)
 
-y_train = X_train.UltimaCarrera == "IngenierÃ­a InformÃ¡tica"
-y_test = X_test.UltimaCarrera == "IngenierÃ­a InformÃ¡tica"
-
-
-X_test.pop("UltimaCarrera")
-X_train.pop("UltimaCarrera")
-
-
-
-y_test = pd.DataFrame(y_test, columns=["UltimaCarrera"])
-
-y_test = y_test['UltimaCarrera'].astype(np.float32)
-
-y_train = pd.DataFrame(y_train, columns=["UltimaCarrera"])
-
-y_train = y_train['UltimaCarrera'].astype(np.float32)
-
-'''
-print(y_train)
-print(y_test)
-print(y_train.dtypes)
-print(y_test.dtypes)
-print(X_test.dtypes)
-print(X_train.dtypes)
-
-print(y_train.shape)
-print(y_test.shape)
-print(X_test.shape)
-print(X_train.shape)
-'''
-
-input =len(X_train.columns)
-
-model = keras.Sequential([
-    layers.Dense(200, input_shape=[input]),
-    layers.Activation('relu'),
-    layers.Dropout(0.3),
-    layers.BatchNormalization(),
-    layers.Dense(200),
-    layers.Activation('relu'),
-    layers.Dropout(0.3),
-    layers.BatchNormalization(),
-    #layers.Dense(1, activation='softmax'),
-    layers.Dense(1, activation='sigmoid'),
-])
-
-
-early_stopping =callbacks.EarlyStopping(
-   # monitor='accuracy',
-    monitor='binary_accuracy',
-    min_delta=0.005,
-    patience=20,
-    restore_best_weights=True,
-)
-
-'''
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(
-        learning_rate=0.01),
-        loss='binary_crossentropy',
-        metrics=['binary_accuracy'],
-    #loss='categorical_crossentropy',
-    #sparse_categorical_crossentropy
-    #metrics=['accuracy']
-)
-'''
-model.compile(
-    optimizer='adam',
-    loss='binary_crossentropy',
-    metrics=['binary_accuracy'],
-)
-
-
-history = model.fit(
-    X_train, y_train,
-    validation_data=(X_test, y_test),
-    batch_size=512,
-    epochs=500,
-    callbacks=[early_stopping],
-)
-'''
-preds = model.predict(X_test).round( decimals=0)
-
-
-y_test = y_test.to_numpy()
-preds = preds.astype(int)
-preds = (np.asarray(preds)).flatten()
-
-
-Correct = (y_test == preds)
-
-Correct = Correct.astype(int)
-print("TOTAL")
-print(Correct)
-
-countAll = len(y_test)
-countCorrect = np.count_nonzero(Correct)
-print('Print count of True elements in array: ', countCorrect)
-print('Print count of ALL elements in array: ', countAll)
-
-print("TOTAL ACCURATE: ", countCorrect/countAll)
-'''
-
-
-'''#plt.plot(history.history['accuracy'])
-plt.plot(history.history['binary_accuracy'])
-plt.show()
-#plt.plot(history.history['loss'])
-plt.plot(history.history['binary_crossentropy'])
-plt.show()'''
-
-history_df = pd.DataFrame(history.history)
-# Start the plot at epoch 5
-history_df.loc[5:, ['loss', 'val_loss']].plot()
-history_df.loc[5:, ['binary_accuracy', 'val_binary_accuracy']].plot()
-
-print(("Best Validation Loss: {:0.4f}" +\
-      "\nBest Validation Accuracy: {:0.4f}")\
-      .format(history_df['val_loss'].min(),
-              history_df['val_binary_accuracy'].max()))
-'''
-history_df = pd.DataFrame(history.history)
-# Start the plot at epoch 5. You can change this to get a different view.
-#history_df.loc[5:, ['loss']].plot();
-history_df.loc[5:, ['binary_crossentropy']].plot();
-
-print(("Best accuracy {:0.4f}" )\
-    #  .format(history_df['accuracy'].max()))
-    .format(history_df['binary_accuracy'].max()))
-'''
-score = model.evaluate(X_test, y_test, verbose=0)
-print("Test loss:", score[0])
-print("Test accuracy:", score[1])
