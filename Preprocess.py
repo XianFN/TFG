@@ -136,36 +136,87 @@ def hola(Data):
                 Data[columna][ind] = 1
 
 
+    for ind, persona in enumerate(Data.Organizada):
+        if persona == "No es lo mÃ­o.":
+            Data.Organizada[ind] = 0
+        elif persona == "Lo mÃ­nimo para alcanzar mis objetivos.":
+            Data.Organizada[ind] = 1
+        elif persona == "Bastante, organizo mis asuntos personales.":
+            Data.Organizada[ind] = 2
+        elif persona == "Mucho, me gusta tambiÃ©n planificar asuntos ajenos o grupales.":
+            Data.Organizada[ind] = 3
+
+    PrefiereMaquinas = {}
+    PrefierePersonas = {}
+    for ind, persona in enumerate(Data.PrefiereMaquinasOPersonas):
+        PrefiereMaquinas[ind] = 0
+        PrefierePersonas[ind] = 0
+        if persona == "Personas":
+            PrefierePersonas[ind] = 1
+        elif persona == "MÃ¡quinas":
+            PrefiereMaquinas[ind] = 1
+
+
+    Data["PrefiereMaquinas"] = pd.Series(PrefiereMaquinas)
+    Data["PrefierePersonas"] = pd.Series(PrefierePersonas)
+    Data.pop("PrefiereMaquinasOPersonas")
 
 
 
+    print(Data.shape)
 
 
+    for ind, NumCarreras in enumerate(Data.NumCarrerasEmpezada):
+
+        a_row =Data.iloc[ind]
+        if NumCarreras == "3 o mÃ¡s" and a_row.AntepenultimaSatisfaccion > 5:
+            copy = a_row
+            copy.UltimaSatisfaccion = a_row.AntepenultimaSatisfaccion
+            copy.UltimaAcabado = a_row.AntepenultimaAcabado
+            copy.UltimaCarrera = a_row.AntepenultimaCarrera
+            copy.NumCarrerasEmpezada = 1;
+            Data = Data.append(copy, ignore_index=True)
 
 
+        if (NumCarreras == "3 o mÃ¡s" or NumCarreras == "2") and a_row.PenultimaSatisfaccion > 5:
+            copy = a_row
+            copy.UltimaSatisfaccion = a_row.PenultimaSatisfaccion
+            copy.UltimaAcabado = a_row.PenultimaAcabado
+            copy.UltimaCarrera = a_row.PenultimaCarrera
+            copy.NumCarrerasEmpezada = 1;
+            Data = Data.append(copy, ignore_index=True)
+
+    print(Data.shape)
+
+    #TODO Borrar todas las filas, que la satisfaccion sea menor que 5
+
+    #printColumnValues(Data)
 
 
-    printColumnValues(Data)
+    Data.pop("AntepenultimaSatisfaccion")
+    Data.pop("AntepenultimaAcabado")
+    Data.pop("AntepenultimaCarrera")
+    Data.pop("PenultimaSatisfaccion")
+    Data.pop("PenultimaAcabado")
+    Data.pop("PenultimaCarrera")
+    Data.pop("UltimaAcabado")
+    Data.pop("UltimaSatisfaccion")
+    Data.pop("NumCarrerasEmpezada")
 
+    changeDtype(Data)
+    #print(Data.dtypes)
+    # Empeora con 'Compras',
+    #        'EscapeRooms', 'Animales', 'Coches'
+    '''
+    missing_values_count = Data.isnull().sum()
+    # look at the # of missing points in the first ten columns
+    print(missing_values_count[20:30])
+    '''
+    print(Data.columns)
+    columnas = ['AnhoCarrera']
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for columna in columnas:
+        Data.pop(columna)
 
 
     return Data
@@ -174,3 +225,9 @@ def printColumnValues(Data):
 
     for column in Data:
         print(Data[column].value_counts())
+
+def changeDtype(Data):
+
+    for column in Data:
+        if column != "UltimaCarrera":
+            Data[column] = Data[column].astype(np.float32)
