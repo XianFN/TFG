@@ -6,6 +6,7 @@ from keras import layers
 from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def changeDtype(Data):
 
@@ -148,20 +149,21 @@ def TestModel(Data):
         callbacks=[early_stopping],
     )
 
-    plt.plot(history.history['accuracy'])
-    plt.show()
-    plt.plot(history.history['loss'])
-    plt.show()
-
     history_df = pd.DataFrame(history.history)
-    # Start the plot at epoch 5. You can change this to get a different view.
-    history_df.loc[5:, ['loss']].plot();
 
-    print(("Best accuracy {:0.4f}") \
-          .format(history_df['accuracy'].max()))
+    plt.title("Training and validation loss results")
+    sns.lineplot(data=history_df['loss'], label="Training Loss")
+    sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.show()
+    plt.title("Training and validation accuracy results")
+    sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+    sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.show()
 
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
-
-    return score[1]
+    print(history_df.iloc[-1])
+    # TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
+    return history_df.iloc[-1]

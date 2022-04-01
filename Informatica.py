@@ -6,6 +6,7 @@ from keras import layers
 from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def TestModel(Data):
 
@@ -52,15 +53,6 @@ def TestModel(Data):
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
-        layers.Dense(200),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        layers.Dense(200),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        # layers.Dense(1, activation='softmax'),
         layers.Dense(1, activation='sigmoid'),
     ])
 
@@ -90,25 +82,22 @@ def TestModel(Data):
         callbacks=[early_stopping],
     )
 
-
-
-    plt.plot(history.history['binary_accuracy'])
-    plt.show()
-    plt.plot(history.history['loss'])
-    plt.show()
-
     history_df = pd.DataFrame(history.history)
-    # Start the plot at epoch 5
-    history_df.loc[5:, ['loss', 'val_loss']].plot()
-    history_df.loc[5:, ['binary_accuracy', 'val_binary_accuracy']].plot()
 
-    print(("Best Validation Loss: {:0.4f}" + \
-           "\nBest Validation Accuracy: {:0.4f}") \
-          .format(history_df['val_loss'].min(),
-                  history_df['val_binary_accuracy'].max()))
+    plt.title("Training and validation loss results")
+    sns.lineplot(data=history_df['loss'], label="Training Loss")
+    sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.show()
+    plt.title("Training and validation accuracy results")
+    sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+    sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.show()
 
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
+    print(history_df.iloc[-1])
+    # TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
+    return history_df.iloc[-1]
 
-    return score[1]
