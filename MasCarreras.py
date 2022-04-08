@@ -115,11 +115,11 @@ def TestModel(Data):
     input = len(X_train.columns)
 
     model = keras.Sequential([
-        layers.Dense(200, input_shape=[input]),
+        layers.Dense(75, input_shape=[input]),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
-        layers.Dense(200),
+        layers.Dense(32),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),

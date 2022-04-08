@@ -211,6 +211,24 @@ def hola(Data):
     missing_values_count = Data.isnull().sum()
     # look at the # of missing points in the first ten columns
     print(missing_values_count[20:30])
+    
+    'Anho', 'AnhoCarrera', 'Nhermanos', 'HermanoMayor', 'Compras',
+       'EscapeRooms', 'Animales', 'Coches', 'Cocinar', 'SalirConAmigos',
+       'Fiesta', 'Naturaleza', 'DeportesNaturaleza', 'Viajar', 'HacerVideos',
+       'HacerFotos', 'Instrumentos', 'Dibujar', 'Manualidades', 'Escribir',
+       'Cantar', 'Bailar', 'Tecnologia', 'Criptomonedas', 'InvertirBolsa',
+       'Leer', 'TelMovil', 'Ordenador', 'Television', 'Series', 'Peliculas',
+       'VerDeportes', 'EscucharMusica', 'Videojuegos', 'PracticarDeportes',
+       'Gimnasio', 'WhatsApp', 'Youtube', 'Twitter', 'Instagram', 'Twitch',
+    'TikTok', 'Linkedin', 'Matematicas', 'LenguaLiteratura', 'Ingles',
+       'Historia', 'EducacionFisica', 'Fisica', 'Quimica', 'DibujoTecnico',
+       'AsignaturaTecnologia', 'Filosofia', 'Biologia', 'LatinGriego',
+       'Frances', 'Religion', 'ManejoOrdenador', 'NumIdiomas', 'PrefiereRural',
+       'EstudiosRelaccionadosConLosPadres', 'IrseDeEspanha', 'CuidarPersonas',
+       'EscucharPersonas', 'CuidarAnimales', 'Sociable', 'Creativo',
+       'Organizada', 'EfectoNegativoSangre', 'UltimaCarrera', 'EsMujer',
+       'EsNoBinario', 'InteresTecnologiaTalVez', 'InteresTecnologiaNo',
+       'PrefiereCiudad', 'PrefiereMaquinas', 'PrefierePersonas'
     '''
     print(Data.columns)
     columnas = ['AnhoCarrera']

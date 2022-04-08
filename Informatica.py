@@ -7,6 +7,8 @@ from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 import seaborn as sns
+from imblearn.over_sampling import ADASYN
+from keras.models import load_model
 
 def TestModel(Data):
 
@@ -28,6 +30,14 @@ def TestModel(Data):
 
     y_train = y_train['UltimaCarrera'].astype(np.float32)
 
+    # ''' TODO ADASYN
+    print(X_train.shape)
+    ada = ADASYN(random_state=42)
+    X_res, y_res = ada.fit_resample(X_train, y_train)
+    print(X_res.shape)
+    print(y_res.shape)
+    # '''
+
     '''
     print(y_train)
     print(y_test)
@@ -44,12 +54,13 @@ def TestModel(Data):
 
     input = len(X_train.columns)
 
+
     model = keras.Sequential([
-        layers.Dense(200, input_shape=[input]),
+        layers.Dense(75, input_shape=[input]),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
-        layers.Dense(200),
+        layers.Dense(32),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
@@ -58,7 +69,7 @@ def TestModel(Data):
 
     early_stopping = callbacks.EarlyStopping(
         # monitor='accuracy',
-        monitor='binary_accuracy',
+        monitor='val_binary_accuracy',
         min_delta=0.005,
         patience=20,
         restore_best_weights=True,
@@ -77,12 +88,22 @@ def TestModel(Data):
     history = model.fit(
         X_train, y_train,
         validation_data=(X_test, y_test),
-        batch_size=512,
+        batch_size=32,
         epochs=500,
         callbacks=[early_stopping],
     )
+    '''
+   # model.save('my_model.h5')
+    model2 = load_model('my_model.h5')
+    score = model2.evaluate(X_test, y_test, verbose=0)
+    print("Test loss:", score[0])
+    print("Test accuracy:", score[1])
+    '''
+
 
     history_df = pd.DataFrame(history.history)
+    history_df = history_df.rename(columns={'binary_accuracy': 'accuracy'})
+    history_df = history_df.rename(columns={'val_binary_accuracy': 'val_accuracy'})
 
     plt.title("Training and validation loss results")
     sns.lineplot(data=history_df['loss'], label="Training Loss")

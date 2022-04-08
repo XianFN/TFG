@@ -7,6 +7,7 @@ from keras import callbacks
 from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 import seaborn as sns
+from imblearn.over_sampling import ADASYN
 
 def getMinAndMaxForReturn(history):
 
@@ -89,24 +90,53 @@ def TestModel(Data):
     y_train = X_train.UltimaCarrera
     y_test = X_test.UltimaCarrera
 
+    yprueba= y_train
+    yprueba = y_train.map(
+        {"Ciencias de la Actividad FÃ­sica y del Deporte": 1, "IngenierÃ­a InformÃ¡tica": 2, "BiologÃ­a": 3,
+         "Veterinaria": 4, "IngenierÃ­a ElectrÃ³nica": 5,
+         "Magisterio de EducaciÃ³n Primaria": 6, "Derecho": 7, "EnfermerÃ­a": 8,
+         "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as": 9, "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas": 10,
+         "BiotecnologÃ­a": 11, "IngenierÃ­a Aeroespacial": 12,
+         "Ciencias de la Actividad FÃ­sica y del Deporte": 13}).fillna(0)
 
-    y_train =  separarCarreras(y_train)
+    y_train = separarCarreras(y_train)
     y_test = separarCarreras(y_test)
 
 
     X_test.pop("UltimaCarrera")
     X_train.pop("UltimaCarrera")
+    print(X_train.shape)
+    print(y_train.shape)
+
+    ''' TODO ADASYN
+
+    print(X_train.shape)
+    ada = ADASYN(random_state=42)
+    X_res, y_res = ada.fit_resample(X_train, yprueba)
+    print(X_res.shape)
+    print(y_res.shape)
+    y_res = y_res.map(
+        {1: "Ciencias de la Actividad FÃ­sica y del Deporte", 2: "IngenierÃ­a InformÃ¡tica", 3: "BiologÃ­a",
+         4: "Veterinaria", 5: "IngenierÃ­a ElectrÃ³nica",
+         6 : "Magisterio de EducaciÃ³n Primaria", 7: "Derecho", 8: "EnfermerÃ­a",
+         9 : "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as", 10 : "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas",
+         11 : "BiotecnologÃ­a", 12 : "IngenierÃ­a Aeroespacial",
+         13 : "Ciencias de la Actividad FÃ­sica y del Deporte"}).fillna(0)
+
+    y_train = separarCarreras(y_res)
+    X_train = X_res
 
 
+    '''
 
     input = len(X_train.columns)
 
     model = keras.Sequential([
-        layers.Dense(200, input_shape=[input]),
+        layers.Dense(75, input_shape=[input]),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
-        layers.Dense(200),
+        layers.Dense(32),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
@@ -114,15 +144,15 @@ def TestModel(Data):
     ])
 
     early_stopping = callbacks.EarlyStopping(
-        monitor='accuracy',
+        monitor='val_accuracy',
         min_delta=0.005,
         patience=20,
-        restore_best_weights=True,
+
     )
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=0.01),
+            learning_rate=0.001),
         loss='categorical_crossentropy',
         # sparse_categorical_crossentropy
         metrics=['accuracy']
@@ -131,13 +161,14 @@ def TestModel(Data):
     history = model.fit(
         X_train, y_train,
         validation_data=(X_test, y_test),
-        batch_size=64,
+        batch_size=32,
         epochs=300,
         callbacks=[early_stopping],
     )
 
     history_df = pd.DataFrame(history.history)
 
+    '''
     plt.title("Training and validation loss results")
     sns.lineplot(data=history_df['loss'], label="Training Loss")
     sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
@@ -150,7 +181,7 @@ def TestModel(Data):
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
     plt.show()
-
+    '''
 
     print(history_df.iloc[-1])
     #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max

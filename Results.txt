@@ -1,0 +1,50 @@
+
+
+1 TODAS
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+RESULTS
+1
+Training Accuracy mean from  10  iterations:  0.5562499940395356
+Training Loss mean from  10  iterations:  1.3644931674003602
+Validation Accuracy mean from  10  iterations:  0.5026881664991378
+Validation Loss mean from  10  iterations:  1.74184650182724
+2
+Training Accuracy mean from  10  iterations:  0.5673214316368103
+Training Loss mean from  10  iterations:  1.3091195225715637
+Validation Accuracy mean from  10  iterations:  0.48870967924594877
+Validation Loss mean from  10  iterations:  1.7702867031097411
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
