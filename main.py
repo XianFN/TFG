@@ -88,7 +88,7 @@ def show_predict_page():
     Input = []
     df = pd.Series(data=Input, dtype=np.float32)
 
-    # TODO genero quitado, años y estudios relaccionados con los padres
+
     soloInformatica = st.sidebar.checkbox('Solo predecir "Ingeniería Informática o otra')
     DatosXian = st.sidebar.checkbox('Datos de Xian')
     DatosIrene  = st.sidebar.checkbox('Datos de Irene')
@@ -200,7 +200,7 @@ def show_predict_page():
         # preproccessing
         print(df)
         Data = Preprocess.preprocessingInput(df)
-        #TODO cambiar numero de hermanos pregunta
+
 
         print(Data.shape)
         Data = Data.T  # Es necesario transponer el Dataframe
@@ -233,12 +233,37 @@ def show_predict_page():
             model = load_model('Informatica.h5')
             classPredicted = model.predict(Data)
             print("Predict", classPredicted[0])
+            with st.container():
+                nombreCarrera = "Informatica" if classPredicted[0] > 0.5 else "Otra"
 
-            nombreCarrera = "Informatica" if classPredicted[0] > 0.5 else "Otra"
+                porcentaje = round(float(classPredicted[0]) * 100, 2) if nombreCarrera == "Informatica"else 100 - round(float(classPredicted[0]) * 100, 2)
+                st.subheader(f"La carrera predecida es : {nombreCarrera} con un {porcentaje}%")
 
-            st.subheader(f"La carrera recomendada es : {nombreCarrera}")
-            porcentaje = round(float(classPredicted[0]) * 100, 2)
-            st.subheader(f"Con un porcentaje del : {porcentaje} %")
+
+                st.subheader("Gráfico: ")
+
+
+                carrerasSeleccionadas = ["Informatica", "Otra"]
+                carrerasSeleccionadasPorcentaje = [round(float(classPredicted[0]) * 100, 2), 100 - round(float(classPredicted[0]) * 100, 2)]
+
+                source = pd.DataFrame({"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
+
+                base = alt.Chart(source).mark_arc(innerRadius=50).encode(
+                    theta=alt.Theta("porcentaje", stack=True),
+                    radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
+                    color="Carreras",
+                )
+
+                c1 = base.mark_arc(innerRadius=20, stroke="#fff")
+
+                c2 = base.mark_text(radiusOffset=20).encode(text="porcentaje")
+
+                c1 + c2
+
+            st.markdown(
+                "\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
+                "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
+                "priorizar los gustos personales y hacer lo que mas te guste.")
         else:
             model = load_model('TodasModelo.h5')
             classPredicted = model.predict(Data)
@@ -299,3 +324,16 @@ def changeDtype(Data):
 
 show_predict_page()
 #Train()
+
+
+''''
+TODO: 
+#  genero quitado, años y estudios relaccionados con los padres
+#  preguntar, se deberia pillar el ultimo resultado, o los min. max
+#  enseñar ADASYN
+#  quitar validation data para generar modelo?
+# Deberia fijarme(earlystop) mas en el loss, para que se quede "poco lejos"
+PREGUNTAR carrOtra. deberia dejarla? Y en infomatica? Redufcir el numero de otras?
+
+
+'''

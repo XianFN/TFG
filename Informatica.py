@@ -120,6 +120,6 @@ def TestModel(Data):
     plt.show()
 
     print(history_df.iloc[-1])
-    # TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
+
     return history_df.iloc[-1]
 

@@ -52,7 +52,6 @@ def separarCarreras(y):
 
     #CarrOtra = [CarrInformatica or CarrBiologia or CarrVeterinaria or CarrElectronica or CarrMagisterio or CarrDerecho
      #           or CarrEnfermeria or CarrFilologia or CarrADE or CarrBiotecn or CarrAeroesp or CarrDeporte]
-    # TODO PREGUNTAR MAITE carrOtra
 
     y["CarrInformatica"] = CarrInformatica
     y["CarrBiologia"] = CarrBiologia
