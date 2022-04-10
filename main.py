@@ -66,7 +66,7 @@ def show_predict_page():
                        initial_sidebar_state='collapsed',
                        menu_items={
 
-                       } )
+                       })
 
     image = Image.open('Imagenes/Logo.png')
 
@@ -326,14 +326,3 @@ show_predict_page()
 #Train()
 
 
-''''
-TODO: 
-#  genero quitado, años y estudios relaccionados con los padres
-#  preguntar, se deberia pillar el ultimo resultado, o los min. max
-#  enseñar ADASYN
-#  quitar validation data para generar modelo?
-# Deberia fijarme(earlystop) mas en el loss, para que se quede "poco lejos"
-PREGUNTAR carrOtra. deberia dejarla? Y en infomatica? Redufcir el numero de otras?
-
-
-'''
