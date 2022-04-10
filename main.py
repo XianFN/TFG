@@ -8,21 +8,24 @@ from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 import pickle
 import streamlit as st
+import time
+from keras.models import load_model
+import altair as alt
+from PIL import Image
 
 import MasCarreras
 import Preprocess
 import Informatica
 import VAE
+import VAEPRUEBAS
+
 
 def Train():
-
     Data = pd.read_csv('DataSet/DATATEST-2.csv')
 
-
-    Data = Preprocess.hola(Data)
+    Data = Preprocess.preprocessingDataset(Data)
 
     # print(Data["UltimaCarrera"].value_counts()[0:10])
-
 
     print(Data.shape)
 
@@ -31,12 +34,14 @@ def Train():
     AllVal_Accuracy = 0.0
     AllVal_Loss = 0.0
 
-    NumIterations = 10
+    NumIterations = 1
 
     for x in range(0, NumIterations):
-    # ret = Informatica.TestModel(Data)
-    # ret = MasCarreras.TestModel(Data)
-        ret = VAE.TestModel(Data)
+        #ret = Informatica.TestModel(Data)
+        # ret = MasCarreras.TestModel(Data)
+
+        #ret = VAE.TestModel(Data)
+        ret = VAEPRUEBAS.TestModel(Data)
 
         AllLoss += ret['loss']
         AllAccuracy += ret['accuracy']
@@ -52,123 +57,245 @@ def Train():
     print("Validation Loss mean from ", NumIterations, " iterations: ", AllVal_Loss / NumIterations)
 
 
-
 def show_predict_page():
 
-    '''
-    'Anho', 'Nhermanos', 'HermanoMayor', 'Compras',
-    'EscapeRooms', 'Animales', 'Coches', 'Cocinar', 'SalirConAmigos',
-    'Fiesta', 'Naturaleza', 'DeportesNaturaleza', 'Viajar', 'HacerVideos',
-    'HacerFotos', 'Instrumentos', 'Dibujar', 'Manualidades', 'Escribir',
-    'Cantar', 'Bailar', 'Tecnologia', 'Criptomonedas', 'InvertirBolsa',
-    'Leer', 'TelMovil', 'Ordenador', 'Television', 'Series', 'Peliculas',
-    'VerDeportes', 'EscucharMusica', 'Videojuegos', 'PracticarDeportes',
-    'Gimnasio', 'WhatsApp', 'Youtube', 'Twitter', 'Instagram', 'Twitch',
-    'TikTok', 'Linkedin', 'Matematicas', 'LenguaLiteratura', 'Ingles',
-    'Historia', 'EducacionFisica', 'Fisica', 'Quimica', 'DibujoTecnico',
-    'AsignaturaTecnologia', 'Filosofia', 'Biologia', 'LatinGriego',
-    'Frances', 'Religion', 'ManejoOrdenador', 'NumIdiomas', 'PrefiereRural',
-    'EstudiosRelaccionadosConLosPadres', 'IrseDeEspanha', 'CuidarPersonas',
-    'EscucharPersonas', 'CuidarAnimales', 'Sociable', 'Creativo',
-    'Organizada', 'EfectoNegativoSangre', 'UltimaCarrera', 'EsMujer',
-    'EsNoBinario', 'InteresTecnologiaTalVez', 'InteresTecnologiaNo',
-    'PrefiereCiudad', 'PrefiereMaquinas', 'PrefierePersonas'
-'''
 
-    st.title("Career recomender")
-    st.write("""### Please enter your data """)
-    #https://discuss.streamlit.io/t/how-to-take-text-input-from-a-user/187
-    year = st.slider('years old', 0, 100, 18)
+    st.set_page_config(page_title='EStuDIA',
+                       page_icon="🧊",
+                       # layout='wide',
+                       initial_sidebar_state='collapsed',
+                       menu_items={
+
+                       } )
+
+    image = Image.open('Imagenes/Logo.png')
+
+    st.image(image)
+
+    st.text("")
+    st.subheader("Recomendador de carreras universitarias basado en Inteligencia Artificial\n\n\n")
+    st.text("Deberás responder a esta serie de preguntas( 3 min. aproximado).\nDespues, la IA que he entrenado procesa los datos."
+            "\nEsta intentará predecir que carreras universitaras se adaptan a tus gustos. \nDado que se trata de una predicción, los resulta"
+            "dos puede que no sean exactos")
 
 
 
-    Nhermanos = st.slider('Nhermanos', 0, 100, 18)
-    HermanoMayor = st.checkbox('HermanoMayor')
-    Compras = st.slider('Compras', 1, 5, 3)
-    EscapeRooms = st.slider('EscapeRooms', 1, 5, 3)
-    Animales = st.slider('Animales', 1, 5, 3)
-    Coches = st.slider('Coches', 1, 5, 3)
-    Cocinar = st.slider('Cocinar', 1, 5, 3)
-    SalirConAmigos = st.slider('SalirConAmigos', 1, 5, 3)
-    Fiesta = st.slider('Fiesta', 1, 5, 3)
-    Naturaleza = st.slider('Naturaleza', 1, 5, 3)
-    DeportesNaturaleza = st.slider('DeportesNaturaleza', 1, 5, 3)
-    Viajar = st.slider('Viajar', 1, 5, 3)
-    HacerVideos = st.slider('HacerVideos', 1, 5, 3)
-    HacerFotos = st.slider('HacerFotos', 1, 5, 3)
-    Instrumentos = st.slider('Instrumentos', 1, 5, 3)
-    Dibujar = st.slider('Dibujar', 1, 5, 3)
-    Manualidades = st.slider('Manualidades', 1, 5, 3)
-    Escribir = st.slider('Escribir', 1, 5, 3)
-    Cantar = st.slider('Cantar', 1, 5, 3)
-    Bailar = st.slider('Bailar', 1, 5, 3)
-    Tecnologia = st.slider('Tecnologia', 1, 5, 3)
-    Criptomonedas = st.slider('Criptomonedas', 1, 5, 3)
-    InvertirBolsa = st.slider('InvertirBolsa', 1, 5, 3)
-    Leer = st.slider('Leer', 1, 5, 3)
-    TelMovil = st.slider('TelMovil', 1, 5, 3)
-    Ordenador = st.slider('Ordenador', 1, 5, 3)
-    Television = st.slider('Television', 1, 5, 3)
-    Series = st.slider('Series', 1, 5, 3)
-    Peliculas = st.slider('Peliculas', 1, 5, 3)
-    VerDeportes = st.slider('VerDeportes', 1, 5, 3)
-    EscucharMusica = st.slider('EscucharMusica', 1, 5, 3)
-    Videojuegos = st.slider('Videojuegos', 1, 5, 3)
-    PracticarDeportes = st.slider('PracticarDeportes', 1, 5, 3)
-    Gimnasio = st.slider('Gimnasio', 1, 5, 3)
-    WhatsApp = st.slider('WhatsApp', 1, 5, 3)
-    Youtube = st.slider('Youtube', 1, 5, 3)
-    Twitter = st.slider('Twitter', 1, 5, 3)
-    Instagram = st.slider('Instagram', 1, 5, 3)
-    Twitch = st.slider('Twitch', 1, 5, 3)
-    TikTok = st.slider('TikTok', 1, 5, 3)
-    Linkedin = st.slider('Linkedin', 1, 5, 3)
-    Matematicas = st.slider('Matematicas', 1, 5, 3)
-    LenguaLiteratura = st.slider('LenguaLiteratura', 1, 5, 3)
-    Ingles = st.slider('Ingles', 1, 5, 3)
-    Historia = st.slider('Historia', 1, 5, 3)
-    EducacionFisica = st.slider('EducacionFisica', 1, 5, 3)
-    Fisica = st.slider('Fisica', 1, 5, 3)
-    Quimica = st.slider('Quimica', 1, 5, 3)
-    DibujoTecnico = st.slider('DibujoTecnico', 1, 5, 3)
-    AsignaturaTecnologia = st.slider('AsignaturaTecnologia', 1, 5, 3)
-    Filosofia = st.slider('Filosofia', 1, 5, 3)
-    Biologia = st.slider('Biologia', 1, 5, 3)
-    LatinGriego = st.slider('LatinGriego', 1, 5, 3)
-    Frances = st.slider('Frances', 1, 5, 3)
-    Religion = st.slider('Religion', 1, 5, 3)
-    ManejoOrdenador = st.slider('ManejoOrdenador', 1, 5, 3)
-    NumIdiomas = st.slider('NumIdiomas', 1, 5, 3)
-    PrefiereRural = st.slider('PrefiereRural', 1, 5, 3)
-    EstudiosRelaccionadosConLosPadres = st.slider('EstudiosRelaccionadosConLosPadres', 1, 5, 3)
-    IrseDeEspanha = st.slider('IrseDeEspanha', 1, 5, 3)
-    CuidarPersonas = st.slider('CuidarPersonas', 1, 5, 3)
-    EscucharPersonas = st.slider('EscucharPersonas', 1, 5, 3)
-    CuidarAnimales = st.slider('CuidarAnimales', 1, 5, 3)
-    Sociable = st.slider('Sociable', 1, 5, 3)
-    Creativo = st.slider('Creativo', 1, 5, 3)
-    Organizada = st.slider('Organizada', 1, 5, 3)
-    EfectoNegativoSangre = st.slider('EfectoNegativoSangre', 1, 5, 3)
-    EsMujer = st.slider('EsMujer', 1, 5, 3)
-    EsNoBinario = st.slider('EsNoBinario', 1, 5, 3)
-    InteresTecnologiaTalVez  = st.slider('InteresTecnologiaTalVez', 1, 5, 3)
-    InteresTecnologiaNo  = st.slider('InteresTecnologiaNo', 1, 5, 3)
-    PrefiereCiudad  = st.slider('PrefiereCiudad', 1, 5, 3)
-    PrefiereMaquinas  = st.slider('PrefiereMaquinas', 1, 5, 3)
-    PrefierePersonas  = st.slider('PrefierePersonas', 1, 5, 3)
+    st.text("")
+    st.text("")
+    st.caption("Trabajo de Fin de Grado de Ingeniería Informática. Desarrollado por Xián Filgueiras Nogueira")
 
-    #mejora: hacer una encuesta o despues de si piensa que es bullying o no y esto se anyade a datos?
-    ok = st.button("predict career")
+
+    Input = []
+    df = pd.Series(data=Input, dtype=np.float32)
+
+    # TODO genero quitado, años y estudios relaccionados con los padres
+    soloInformatica = st.sidebar.checkbox('Solo predecir "Ingeniería Informática o otra')
+    DatosXian = st.sidebar.checkbox('Datos de Xian')
+    DatosIrene  = st.sidebar.checkbox('Datos de Irene')
+
+    st.text("")
+    st.subheader("""Parte 1 - Indica del 1(nada) al 5(mucho) lo que te gustan los distintos hobbies: """)
+
+    df["Compras"] = st.slider('ir de compras', 1, 5, 1)
+    df["EscapeRooms"] = st.slider('Escape Rooms', 1, 5, 1)
+    df["Animales"] = st.slider('Estar con animales', 1, 5, 1)
+    df["Coches"] = st.slider('Coches', 1, 5, 1)
+    df["Cocinar"] = st.slider('Cocinar', 1, 5, 1)
+    df["SalirConAmigos"] = st.slider('Salir con tus amigos', 1, 5, 1)
+    df["Fiesta"] = st.slider('Salir de fiesta', 1, 5, 1)
+    df["Naturaleza"] = st.slider('Pasar tiempo en la naturaleza', 1, 5, 1)
+    df["DeportesNaturaleza"] = st.slider('Hacer deporte en la naturaleza', 1, 5, 1)
+    df["Viajar"] = st.slider('Viajar', 1, 5, 1)
+    df["HacerVideos"] = st.slider('Grabar vídeos', 1, 5, 1)
+    df["HacerFotos"] = st.slider('Fotografía', 1, 5, 1)
+    df["Instrumentos"] = st.slider('Tocar instrumentos', 1, 5, 1)
+    df["Dibujar"] = st.slider('Dibujar', 1, 5, 1)
+    df["Manualidades"] = st.slider('Manualidades', 1, 5, 1)
+    df["Escribir"] = st.slider('Escribir', 1, 5, 1)
+    df["Cantar"] = st.slider('Cantar', 1, 5, 1)
+    df["Bailar"] = st.slider('Bailar', 1, 5, 1)
+    df["Tecnologia"] = st.slider('Tecnologia', 1, 5, 1)
+    df["Criptomonedas"] = st.slider('Criptomonedas', 1, 5, 1)
+    df["InvertirBolsa"] = st.slider('Invertir en bolsa', 1, 5, 1)
+
+
+    st.text("")
+    st.subheader("""Parte 2 - ¿Cuántas horas al día de media dedicas a las siguientes actividades?""")
+    df["Leer"] = st.slider('Leer libros', 0, 12, 0)
+    df["TelMovil"] = st.slider('Teléfono Móvil', 0, 12, 0)
+    df["Ordenador"] = st.slider('Ordenador', 0, 12, 0)
+    df["Television"] = st.slider('Televisión', 0, 12, 0)
+    df["Series"] = st.slider('Ver series', 0, 12, 0)
+    df["Peliculas"] = st.slider('Ver peliculas', 0, 12, 0)
+    df["Vereportes"] = st.slider('Ver deportes', 0, 12, 0)
+    df["EscucharMusica"] = st.slider('Escuchar Música', 0, 12, 0)
+    df["Videojuegos"] = st.slider('Videojuegos', 0, 12, 0)
+    df["PracticarDeportes"] = st.slider('Practicar deportes', 0, 12, 0)
+    df["Gimnasio"] = st.slider('Gimnasio', 0, 12, 0)
+
+    st.text("")
+    st.subheader("""Parte 3 - Indica del 1(nada) al 5(mucho) cuánto usas al día las siguientes redes sociales.""")
+    df["WhatsApp"] = st.slider('WhatsApp', 1, 5, 1)
+    df["Youtube"] = st.slider('Youtube', 1, 5, 1)
+    df["Twitter"] = st.slider('Twitter', 1, 5, 1)
+    df["Instagram"] = st.slider('Instagram', 1, 5, 1)
+    df["Twitch"] = st.slider('Twitch', 1, 5, 1)
+    df["TikTok"] = st.slider('TikTok', 1, 5, 1)
+    df["Linkedin"] = st.slider('Linkedin', 1, 5, 1)
+
+    st.text("")
+    st.subheader("""Parte 4 - Indica del 1(nada) al 5(mucho) cuánto te gustaban en secundaria las siguientes asignaturas.""")
+    st.subheader("IMPORTANTE: Introduce 0 si no la has cursado")
+
+    df["Matematicas"] = st.slider('Matemáticas', 0, 5, 0)
+    df["LenguaLiteratura"] = st.slider('Lengua y Literatura', 0, 5, 0)
+    df["Ingles"] = st.slider('Inglés', 0, 5, 0)
+    df["Historia"] = st.slider('Historia', 0, 5, 0)
+    df["EducacionFisica"] = st.slider('Educación Física', 0, 5, 0)
+    df["Fisica"] = st.slider('Física', 0, 5, 0)
+    df["Quimica"] = st.slider('Química', 0, 5, 0)
+    df["DibujoTecnico"] = st.slider('Dibujo Técnico', 0, 5, 0)
+    df["AsignaturaTecnologia"] = st.slider('Tecnología', 0, 5, 0)
+    df["Filosofia"] = st.slider('Filosofía', 0, 5, 0)
+    df["Biologia"] = st.slider('Biología', 0, 5, 0)
+    df["LatinGriego"] = st.slider('Latín y Griego', 0, 5, 0)
+    df["Frances"] = st.slider('Francés', 0, 5, 0)
+    df["Religion"] = st.slider('Religión', 0, 5, 0)
+
+    st.text("")
+    st.subheader("""Parte 5 y última - Algunas preguntas más expecíficas.""")
+
+    df["Nhermanos"] = st.slider('Número de hermanos (sin contarte a ti).', 0, 10, 0)
+    df["HermanoMayor"] = st.checkbox('Selecciona esta opción si eres el mayor de tus hermanos')
+    df["NumIdiomas"] = st.slider('¿En cuántos idiomas te defiendes mediadamente contando el nativo?', 1, 6, 1)
+    df["ManejoOrdenador"] = st.slider('¿Cuál es tu nivel de manejo del ordenador?', 1, 5, 1)
+    df["InteresEnTecnologia"] = st.radio(
+        "¿Tienes interés de como funcionan los aparatos que usamos a diario, como el ordenador, la televisión, la radio…?",
+        ["Si", "Un poco", "No"])
+
+    df["PrefiereRural"] = st.radio('¿Te gusta más la vida en el rural o en la ciudad?',
+                                   ["Rural", "Ciudad", "Indiferente"])
+    df["IrseDeEspanha"] = st.radio('¿Te gustaría irte de España en el futuro?', ["Si", "Tal vez", "No"])
+    df["CuidarPersonas"] = st.radio('¿Te gusta cuidar de las personas?', ["Si", "Tal vez", "No"])
+    df["EscucharPersonas"] = st.radio('¿Te gusta escuchar a las personas?', ["Si", "Tal vez", "No"])
+    df["CuidarAnimales"] = st.radio('¿Te gusta cuidar de los animales?', ["Si", "Tal vez", "No"])
+    df["PrefiereMaquinasOPersonas"] = st.radio('¿Prefieres trabajar con máquinas o con personas?',
+                                               ["Máquinas", "Indiferente", "Personas"])
+    df["Sociable"] = st.radio('¿Te consideras sociable?', ["Si", "Tal vez", "No"])
+    df["Creativo"] = st.radio('¿Te consideras creativo?', ["Si", "Tal vez", "No"])
+    df["Organizada"] = st.radio("¿Eres una persona organizada?",
+                                ["Mucho, me gusta también planificar asuntos ajenos o grupales.",
+                                 "Bastante, organizo mis asuntos personales.", "Lo mínimo para alcanzar mis objetivos.",
+                                 "No es lo mío."])
+    df["EfectoNegativoSangre"] = st.radio('¿Tiene algún efecto negativo para ti manejar o ver sangre?',
+                                                  ["Si", "Tal vez", "No"])
+
+    st.text("")
+    ok = st.button("Ver resultados")
+
+
+
     if ok:
-     #preproccessing
-     print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-     print(year)
+
+        # preproccessing
+        print(df)
+        Data = Preprocess.preprocessingInput(df)
+        #TODO cambiar numero de hermanos pregunta
+
+        print(Data.shape)
+        Data = Data.T  # Es necesario transponer el Dataframe
+        print(Data.shape)
+        print(Data)
+        print("XIAN")
+
+        #Data.to_csv('datos.csv')
+        if DatosXian:
+            Data = pd.read_csv('DatosXian.csv',index_col=None)
+
+            Data = pd.DataFrame(data=Data)
+
+            changeDtype(Data)
+            print(Data.shape)
+
+            print(Data)
+
+        if DatosIrene:
+            Data = pd.read_csv('datosIrene.csv', index_col=None)
+
+            Data = pd.DataFrame(data=Data)
+
+            changeDtype(Data)
+            print(Data.shape)
+
+            print(Data)
+
+        if soloInformatica:
+            model = load_model('Informatica.h5')
+            classPredicted = model.predict(Data)
+            print("Predict", classPredicted[0])
+
+            nombreCarrera = "Informatica" if classPredicted[0] > 0.5 else "Otra"
+
+            st.subheader(f"La carrera recomendada es : {nombreCarrera}")
+            porcentaje = round(float(classPredicted[0]) * 100, 2)
+            st.subheader(f"Con un porcentaje del : {porcentaje} %")
+        else:
+            model = load_model('TodasModelo.h5')
+            classPredicted = model.predict(Data)
+            print(classPredicted)
+            print("Predict", classPredicted[0])
+
+            classPredicted = classPredicted*100
+
+            print(classPredicted)
+
+            carreras = ["Ingeniería Informática", "Biología", "Veterinaria", "Ingeniería Eléctrica", "Magisterio de Educación Primaria", "Derecho", "Enfermería",  "Lenguas Modernas - Lenguas Clásicas - Filologías",
+                         "ADE - Administración y Dirección de Empresas", "Biotecnología", "Ingeniería Aeroespacial", "Ciencias de la Actividad Física y del Deporte", "Otra"]
+            carrerasSeleccionadas = []
+            carrerasSeleccionadasPorcentaje = []
+
+            with st.container():
+                st.subheader("Las carreras predecidas son :")
+
+                for idx, predictCarrera in enumerate(classPredicted[0]):
+                    if float(predictCarrera) > 15:
+
+                        carrerasSeleccionadas.append(carreras[idx])
+                        carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
+                        st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                print(carrerasSeleccionadas)
+                print(carrerasSeleccionadasPorcentaje)
+
+                st.subheader("Gráfico: ")
+
+                source = pd.DataFrame({"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
 
 
+                base = alt.Chart(source).mark_arc(innerRadius=50).encode(
+                    theta=alt.Theta("porcentaje", stack=True),
+                    radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
+                    color="Carreras",
+                )
 
-     st.subheader(f"The estimated career is ${year}")
+                c1 = base.mark_arc(innerRadius=20, stroke="#fff")
+
+
+                c2 = base.mark_text(radiusOffset=20).encode(text="porcentaje")
+
+
+                c1 + c2
+
+
+            st.markdown("\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
+                    "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
+                    "priorizar los gustos personales y hacer lo que mas te guste.")
+
+def changeDtype(Data):
+
+    for column in Data:
+       Data[column] = Data[column].astype(np.float32)
+
 
 
 show_predict_page()
 #Train()
-

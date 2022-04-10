@@ -12,31 +12,32 @@ from keras.models import load_model
 
 def TestModel(Data):
 
-    X_train = Data.sample(frac=0.75, random_state=200)
+    #X_train = Data.sample(frac=0.75, random_state=200)
+    X_train = Data
 
-    X_test = Data.drop(X_train.index)
+    #X_test = Data.drop(X_train.index)
 
     y_train = X_train.UltimaCarrera == "IngenierÃ­a InformÃ¡tica"
-    y_test = X_test.UltimaCarrera == "IngenierÃ­a InformÃ¡tica"
+    #y_test = X_test.UltimaCarrera == "IngenierÃ­a InformÃ¡tica"
 
-    X_test.pop("UltimaCarrera")
+    #X_test.pop("UltimaCarrera")
     X_train.pop("UltimaCarrera")
 
-    y_test = pd.DataFrame(y_test, columns=["UltimaCarrera"])
+    #y_test = pd.DataFrame(y_test, columns=["UltimaCarrera"])
 
-    y_test = y_test['UltimaCarrera'].astype(np.float32)
+    #y_test = y_test['UltimaCarrera'].astype(np.float32)
 
     y_train = pd.DataFrame(y_train, columns=["UltimaCarrera"])
 
     y_train = y_train['UltimaCarrera'].astype(np.float32)
 
-    # ''' TODO ADASYN
+    ''' TODO ADASYN
     print(X_train.shape)
     ada = ADASYN(random_state=42)
     X_res, y_res = ada.fit_resample(X_train, y_train)
     print(X_res.shape)
     print(y_res.shape)
-    # '''
+     '''
 
     '''
     print(y_train)
@@ -68,8 +69,8 @@ def TestModel(Data):
     ])
 
     early_stopping = callbacks.EarlyStopping(
-        # monitor='accuracy',
-        monitor='val_binary_accuracy',
+        #monitor='val_binary_accuracy',
+        monitor='binary_accuracy',
         min_delta=0.005,
         patience=20,
         restore_best_weights=True,
@@ -87,7 +88,7 @@ def TestModel(Data):
 
     history = model.fit(
         X_train, y_train,
-        validation_data=(X_test, y_test),
+        #validation_data=(X_test, y_test),
         batch_size=32,
         epochs=500,
         callbacks=[early_stopping],

@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 
-def hola(Data):
+def preprocessingDataset(Data):
     print("holahola")
     print(Data.columns)
     print(Data.shape)
@@ -231,13 +231,86 @@ def hola(Data):
        'PrefiereCiudad', 'PrefiereMaquinas', 'PrefierePersonas'
     '''
     print(Data.columns)
-    columnas = ['AnhoCarrera']
+    columnas = ['AnhoCarrera','Anho', 'EstudiosRelaccionadosConLosPadres', 'EsMujer', 'EsNoBinario' ]
 
     for columna in columnas:
         Data.pop(columna)
 
 
     return Data
+
+
+def preprocessingInput(Data):
+
+
+    print(Data.shape)
+
+    #  missing_values_count = Data.isnull().sum()
+
+    # look at the # of missing points in the first ten columns
+    #     print(missing_values_count[0:10])
+
+
+
+    # COMPROBAR LOS NA TODO
+    print(Data)
+
+
+
+    Data.HermanoMayor = 1 if Data.HermanoMayor else 0
+
+
+
+    Data["InteresTecnologiaTalVez"] = 1 if Data['InteresEnTecnologia'] == "Un poco" else 0
+    Data["InteresTecnologiaNo"] = 1 if Data['InteresEnTecnologia'] == "No" else 0
+
+    Data.pop("InteresEnTecnologia")
+
+    print(Data.InteresTecnologiaTalVez)
+    print(Data.InteresTecnologiaNo)
+
+
+    print(Data.PrefiereRural)
+
+    Data["PrefiereRural"] = 1 if Data['PrefiereRural'] == "Rural" else 0
+    Data["PrefiereCiudad"] = 1 if Data['PrefiereRural'] == "Ciudad" else 0
+
+
+
+    # COMPROBAR que todas las columans se pueda usar así los NA TODO
+
+    columnas = ['IrseDeEspanha', 'CuidarPersonas', 'EscucharPersonas',
+                'CuidarAnimales', 'Sociable', 'Creativo', 'EfectoNegativoSangre']
+    for columna in columnas:
+        Data[columna] = 0 if Data[columna] == "No" else 1
+
+
+    print(Data.Organizada)
+
+    if Data.Organizada == "No es lo mío.":
+        Data.Organizada = 0
+    elif Data.Organizada == "Lo mínimo para alcanzar mis objetivos.":
+        Data.Organizada = 1
+    elif Data.Organizada == "Bastante, organizo mis asuntos personales.":
+        Data.Organizada = 2
+    elif Data.Organizada == "Mucho, me gusta también planificar asuntos ajenos o grupales.":
+        Data.Organizada = 3
+
+    print(Data.Organizada)
+
+    Data["PrefierePersonas"] =  1 if Data['PrefiereMaquinasOPersonas'] == "Personas" else 0
+    Data["PrefiereMaquinas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Máquinas" else 0
+
+    Data.pop("PrefiereMaquinasOPersonas")
+
+    print(Data.shape)
+
+    DataDF = pd.DataFrame(data=Data)
+
+    changeDtype(DataDF)
+
+
+    return DataDF
 
 def printColumnValues(Data):
 
