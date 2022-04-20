@@ -13,6 +13,8 @@ from keras.models import load_model
 import altair as alt
 from PIL import Image
 
+import CincoCategorias
+import CincoCategoriasPruebas
 import MasCarreras
 import Preprocess
 import Informatica
@@ -21,7 +23,9 @@ import VAEPRUEBAS
 
 
 def Train():
-    Data = pd.read_csv('DataSet/DATATEST-2.csv')
+    #TODO CUIDADOOOO
+    #Data = pd.read_csv('DataSet/DATATEST-2.csv')
+    Data = pd.read_csv('DataSet/DATATEST_CincoCategorias.csv')
 
     Data = Preprocess.preprocessingDataset(Data)
 
@@ -34,12 +38,13 @@ def Train():
     AllVal_Accuracy = 0.0
     AllVal_Loss = 0.0
 
-    NumIterations = 5
+    NumIterations = 1
 
     for x in range(0, NumIterations):
-        ret = Informatica.TestModel(Data)
+        #ret = Informatica.TestModel(Data)
         # ret = MasCarreras.TestModel(Data)
-
+        #ret = CincoCategorias.TestModel(Data)
+        ret = CincoCategoriasPruebas.TestModel(Data)
         #ret = VAE.TestModel(Data)
         #ret = VAEPRUEBAS.TestModel(Data)
 
@@ -89,10 +94,9 @@ def show_predict_page():
     df = pd.Series(data=Input, dtype=np.float32)
 
 
-    soloInformatica = st.sidebar.checkbox('Solo predecir "Ingeniería Informática o otra')
-    DatosXian = st.sidebar.checkbox('Datos de Xian')
-    DatosIrene  = st.sidebar.checkbox('Datos de Irene')
-    DatosZaira = st.sidebar.checkbox('Datos de Zaira')
+    datosPrecargados = st.sidebar.selectbox(
+        'Quieres probar con datos precargados?',
+        ('Por defecto', 'datosXian', 'datosIrene', 'datosZaira', 'datosJavi', 'datosMaite','datosJabe', 'datosMaria'))
 
     st.text("")
     st.subheader("""Parte 1 - Indica del 1(nada) al 5(mucho) lo que te gustan los distintos hobbies: """)
@@ -194,6 +198,12 @@ def show_predict_page():
     st.text("")
     ok = st.button("Ver resultados")
 
+    st.text("")
+    st.text("")
+    option = st.selectbox(
+        'Quieres probar con otras predicciones?',
+        ('Por defecto', 'Cinco categorias', 'Informatica o otra'))
+
 
 
     if ok:
@@ -212,37 +222,68 @@ def show_predict_page():
 
         Data.to_csv('datos.csv')
 
-        if DatosXian:
-            Data = pd.read_csv('DatosXian.csv',index_col=None)
 
+        if datosPrecargados != "Por defecto":
+            nombreRuta = "Pruebas/"+ datosPrecargados +".csv"
+            print("NOMRBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE       ",nombreRuta)
+            Data = pd.read_csv(nombreRuta, index_col=None)
             Data = pd.DataFrame(data=Data)
-
             changeDtype(Data)
             print(Data.shape)
 
             print(Data)
 
-        if DatosZaira:
-            Data = pd.read_csv('DatosZaira.csv',index_col=None)
 
-            Data = pd.DataFrame(data=Data)
+        if option == 'Cinco categorias':
 
-            changeDtype(Data)
-            print(Data.shape)
+            model = load_model('CincoCategoriasModelo.h5')
+            classPredicted = model.predict(Data)
+            print(classPredicted)
+            print("Predict", classPredicted[0])
 
-            print(Data)
+            classPredicted = classPredicted * 100
 
-        if DatosIrene:
-            Data = pd.read_csv('datosIrene.csv', index_col=None)
+            print(classPredicted)
 
-            Data = pd.DataFrame(data=Data)
+            carreras = ["Artes y Humanidades", "Ciencias", "Ciencias de la Salud", "Ciencias Sociales y Jurídicas",
+                        "Ingeniería y Arquitectura"]
+            carrerasSeleccionadas = []
+            carrerasSeleccionadasPorcentaje = []
 
-            changeDtype(Data)
-            print(Data.shape)
+            with st.container():
+                st.subheader("Las carreras predecidas son :")
 
-            print(Data)
+                for idx, predictCarrera in enumerate(classPredicted[0]):
+                    if float(predictCarrera) > 5:
+                        carrerasSeleccionadas.append(carreras[idx])
+                        carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
+                        st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                print(carrerasSeleccionadas)
+                print(carrerasSeleccionadasPorcentaje)
 
-        if soloInformatica:
+                st.subheader("Gráfico: ")
+
+                source = pd.DataFrame(
+                    {"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
+
+                base = alt.Chart(source).mark_arc(innerRadius=50).encode(
+                    theta=alt.Theta("porcentaje", stack=True),
+                    radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
+                    color="Carreras",
+                )
+
+                c1 = base.mark_arc(innerRadius=20, stroke="#fff")
+
+                c2 = base.mark_text(radiusOffset=20).encode(text="porcentaje")
+
+                c1 + c2
+
+            st.markdown(
+                "\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
+                "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
+                "priorizar los gustos personales y hacer lo que mas te guste.")
+
+        if option == 'Informatica o otra':
             model = load_model('Informatica.h5')
             classPredicted = model.predict(Data)
             print("Predict", classPredicted[0])
@@ -296,7 +337,7 @@ def show_predict_page():
                 st.subheader("Las carreras predecidas son :")
 
                 for idx, predictCarrera in enumerate(classPredicted[0]):
-                    if float(predictCarrera) > 15:
+                    if float(predictCarrera) > 10:
 
                         carrerasSeleccionadas.append(carreras[idx])
                         carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
