@@ -34,14 +34,14 @@ def Train():
     AllVal_Accuracy = 0.0
     AllVal_Loss = 0.0
 
-    NumIterations = 1
+    NumIterations = 5
 
     for x in range(0, NumIterations):
-        #ret = Informatica.TestModel(Data)
+        ret = Informatica.TestModel(Data)
         # ret = MasCarreras.TestModel(Data)
 
         #ret = VAE.TestModel(Data)
-        ret = VAEPRUEBAS.TestModel(Data)
+        #ret = VAEPRUEBAS.TestModel(Data)
 
         AllLoss += ret['loss']
         AllAccuracy += ret['accuracy']
@@ -92,6 +92,7 @@ def show_predict_page():
     soloInformatica = st.sidebar.checkbox('Solo predecir "Ingeniería Informática o otra')
     DatosXian = st.sidebar.checkbox('Datos de Xian')
     DatosIrene  = st.sidebar.checkbox('Datos de Irene')
+    DatosZaira = st.sidebar.checkbox('Datos de Zaira')
 
     st.text("")
     st.subheader("""Parte 1 - Indica del 1(nada) al 5(mucho) lo que te gustan los distintos hobbies: """)
@@ -208,9 +209,21 @@ def show_predict_page():
         print(Data)
         print("XIAN")
 
-        #Data.to_csv('datos.csv')
+
+        Data.to_csv('datos.csv')
+
         if DatosXian:
             Data = pd.read_csv('DatosXian.csv',index_col=None)
+
+            Data = pd.DataFrame(data=Data)
+
+            changeDtype(Data)
+            print(Data.shape)
+
+            print(Data)
+
+        if DatosZaira:
+            Data = pd.read_csv('DatosZaira.csv',index_col=None)
 
             Data = pd.DataFrame(data=Data)
 

@@ -170,7 +170,7 @@ def TestModel(Data):
 
     #model.save('TodasModelo.h5')
 
-    '''
+
     plt.title("Training and validation loss results")
     sns.lineplot(data=history_df['loss'], label="Training Loss")
     sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
@@ -183,7 +183,7 @@ def TestModel(Data):
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
     plt.show()
-    '''
+
 
     print(history_df.iloc[-1])
     #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max

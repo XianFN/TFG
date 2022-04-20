@@ -30,7 +30,7 @@ def TestModel(Data):
 
     y_train = y_train['UltimaCarrera'].astype(np.float32)
 
-    # ''' TODO ADASYN
+    #''' TODO ADASYN
     print(X_train.shape)
     ada = ADASYN(random_state=42)
     X_res, y_res = ada.fit_resample(X_train, y_train)
@@ -39,6 +39,12 @@ def TestModel(Data):
     # '''
 
     '''
+    Training Accuracy mean from  5  iterations:  0.9039285778999329
+Training Loss mean from  5  iterations:  0.23586325645446776
+Validation Accuracy mean from  5  iterations:  0.8795698881149292
+Validation Loss mean from  5  iterations:  0.2658550411462784
+
+
     print(y_train)
     print(y_test)
     print(y_train.dtypes)
