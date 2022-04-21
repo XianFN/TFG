@@ -12,6 +12,7 @@ import time
 from keras.models import load_model
 import altair as alt
 from PIL import Image
+from datetime import datetime
 
 import CincoCategorias
 import CincoCategoriasPruebas
@@ -208,8 +209,21 @@ def show_predict_page():
 
     if ok:
 
+
+
         # preproccessing
+
         print(df)
+        column_Nhermanos = df.pop("Nhermanos")
+        column_HermanoMayor = df.pop("HermanoMayor")
+        df = pd.concat([pd.Series({'HermanoMayor' : column_HermanoMayor}), df])
+        df = pd.concat([pd.Series({'Nhermanos': column_Nhermanos}), df])
+
+
+
+        for ind, val in df.iteritems():
+            print(ind, val)
+
         Data = Preprocess.preprocessingInput(df)
 
 
@@ -220,7 +234,6 @@ def show_predict_page():
         print("XIAN")
 
 
-        Data.to_csv('datos.csv')
 
 
         if datosPrecargados != "Por defecto":
@@ -232,7 +245,14 @@ def show_predict_page():
             print(Data.shape)
 
             print(Data)
+        else:
+            now = datetime.now()
+            print(now)
+            dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
+            print("date and time =", dt_string)
 
+            rutaGuardar = "SaveData/" + dt_string + ".cvs"
+            Data.to_csv(rutaGuardar)
 
         if option == 'Cinco categorias':
 
@@ -283,7 +303,7 @@ def show_predict_page():
                 "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
                 "priorizar los gustos personales y hacer lo que mas te guste.")
 
-        if option == 'Informatica o otra':
+        elif option == 'Informatica o otra':
             model = load_model('Informatica.h5')
             classPredicted = model.predict(Data)
             print("Predict", classPredicted[0])
