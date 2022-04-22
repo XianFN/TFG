@@ -151,7 +151,8 @@ def show_predict_page():
 
     st.text("")
     st.subheader("""Parte 4 - Indica del 1(nada) al 5(mucho) cuánto te gustaban en secundaria las siguientes asignaturas.""")
-    st.subheader("IMPORTANTE: Introduce 0 si no la has cursado")
+    st.error("IMPORTANTE: Introduce 0 si no la has cursado")
+
 
     df["Matematicas"] = st.slider('Matemáticas', 0, 5, 0)
     df["LenguaLiteratura"] = st.slider('Lengua y Literatura', 0, 5, 0)
@@ -169,7 +170,7 @@ def show_predict_page():
     df["Religion"] = st.slider('Religión', 0, 5, 0)
 
     st.text("")
-    st.subheader("""Parte 5 y última - Algunas preguntas más expecíficas.""")
+    st.subheader("""Parte 5 y última - Algunas preguntas más específicas.""")
 
     df["Nhermanos"] = st.slider('Número de hermanos (sin contarte a ti).', 0, 10, 0)
     df["HermanoMayor"] = st.checkbox('Selecciona esta opción si eres el mayor de tus hermanos')
@@ -197,13 +198,15 @@ def show_predict_page():
                                                   ["Si", "Tal vez", "No"])
 
     st.text("")
+    option = st.selectbox(
+        'Que te gustaría predecir? (Puedes probar las veces que quieras)',
+        ('Por defecto', 'Ramas de conocimiento'))
+        #('Por defecto', 'Ramas de conocimiento', 'Informatica o otra'))
+    st.text("")
+    st.text("")
     ok = st.button("Ver resultados")
 
-    st.text("")
-    st.text("")
-    option = st.selectbox(
-        'Quieres probar con otras predicciones?',
-        ('Por defecto', 'Cinco categorias', 'Informatica o otra'))
+
 
 
 
@@ -238,23 +241,14 @@ def show_predict_page():
 
         if datosPrecargados != "Por defecto":
             nombreRuta = "Pruebas/"+ datosPrecargados +".csv"
-            print("NOMRBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE       ",nombreRuta)
             Data = pd.read_csv(nombreRuta, index_col=None)
             Data = pd.DataFrame(data=Data)
             changeDtype(Data)
             print(Data.shape)
 
             print(Data)
-        else:
-            now = datetime.now()
-            print(now)
-            dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
-            print("date and time =", dt_string)
 
-            rutaGuardar = "SaveData/" + dt_string + ".cvs"
-            Data.to_csv(rutaGuardar)
-
-        if option == 'Cinco categorias':
+        if option == 'Ramas de conocimiento':
 
             model = load_model('CincoCategoriasModelo.h5')
             classPredicted = model.predict(Data)
@@ -271,25 +265,58 @@ def show_predict_page():
             carrerasSeleccionadasPorcentaje = []
 
             with st.container():
-                st.subheader("Las carreras predecidas son :")
+                st.text("")
+                st.write("Las ramas de conocimiento son: Artes y Humanidades,Ciencias, Ciencias de la Salud, Ciencias Sociales y Jurídicas , Ingeniería y Arquitectura")
+                st.text("")
+                st.write("Las ramas de estudios que tienen un mas del 5% de afinidad contigo según la IA son :")
+
+
+                otros = 0.0;
 
                 for idx, predictCarrera in enumerate(classPredicted[0]):
                     if float(predictCarrera) > 5:
                         carrerasSeleccionadas.append(carreras[idx])
                         carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
-                        st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                        #st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                    else:
+                        otros += round(float(predictCarrera), 2)
+
+                if otros != 0:
+                    carrerasSeleccionadas.append("Otras")
+                    carrerasSeleccionadasPorcentaje.append(round(otros,2))
+
                 print(carrerasSeleccionadas)
                 print(carrerasSeleccionadasPorcentaje)
+                carrerasSeleccionadasPorcentaje,carrerasSeleccionadas = zip(*sorted(zip(carrerasSeleccionadasPorcentaje, carrerasSeleccionadas), reverse=True))
+                print(carrerasSeleccionadas)
+                print(carrerasSeleccionadasPorcentaje)
+
+
+                for idx, percent in enumerate(carrerasSeleccionadasPorcentaje):
+
+                    st.text(f" {percent} % ->  {carrerasSeleccionadas[idx]} ")
+
+
+
+                with st.expander("Clica para el porcentaje de cada rama"):
+                    allPercents =[]
+                    for idx, predictCarrera in enumerate(classPredicted[0]):
+                        allPercents.append(round(float(predictCarrera), 2))
+
+                    allPercents,carreras = zip(*sorted(zip(allPercents, carreras), reverse=True))
+                    for idx, percent in enumerate(allPercents):
+                        st.write(f" {percent} % ->  {carreras[idx]} ")
+
 
                 st.subheader("Gráfico: ")
 
                 source = pd.DataFrame(
-                    {"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
+                    {"Ramas": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
 
                 base = alt.Chart(source).mark_arc(innerRadius=50).encode(
                     theta=alt.Theta("porcentaje", stack=True),
                     radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
-                    color="Carreras",
+                    color="Ramas",
                 )
 
                 c1 = base.mark_arc(innerRadius=20, stroke="#fff")
@@ -349,21 +376,45 @@ def show_predict_page():
             print(classPredicted)
 
             carreras = ["Ingeniería Informática", "Biología", "Veterinaria", "Ingeniería Eléctrica", "Magisterio de Educación Primaria", "Derecho", "Enfermería",  "Lenguas Modernas - Lenguas Clásicas - Filologías",
-                         "ADE - Administración y Dirección de Empresas", "Biotecnología", "Ingeniería Aeroespacial", "Ciencias de la Actividad Física y del Deporte", "Otra"]
+                         "ADE - Administración y Dirección de Empresas", "Biotecnología", "Ingeniería Aeroespacial", "Ciencias de la Actividad Física y del Deporte"]
             carrerasSeleccionadas = []
             carrerasSeleccionadasPorcentaje = []
 
             with st.container():
                 st.subheader("Las carreras predecidas son :")
 
-                for idx, predictCarrera in enumerate(classPredicted[0]):
-                    if float(predictCarrera) > 10:
+                otros = 0.0;
 
+                for idx, predictCarrera in enumerate(classPredicted[0]):
+                    if float(predictCarrera) > 5:
                         carrerasSeleccionadas.append(carreras[idx])
                         carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
-                        st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                        # st.text(f" {round(float(predictCarrera), 2)} % ->  {carreras[idx]} ")
+                    else:
+                        otros += round(float(predictCarrera), 2)
+
+                if otros != 0:
+                    carrerasSeleccionadas.append("Otras")
+                    carrerasSeleccionadasPorcentaje.append(round(otros,2))
+
                 print(carrerasSeleccionadas)
                 print(carrerasSeleccionadasPorcentaje)
+                carrerasSeleccionadasPorcentaje, carrerasSeleccionadas = zip(
+                    *sorted(zip(carrerasSeleccionadasPorcentaje, carrerasSeleccionadas), reverse=True))
+                print(carrerasSeleccionadas)
+                print(carrerasSeleccionadasPorcentaje)
+
+                for idx, percent in enumerate(carrerasSeleccionadasPorcentaje):
+                    st.text(f" {percent} % ->  {carrerasSeleccionadas[idx]} ")
+
+                with st.expander("Clica para el porcentaje de cada Carrera"):
+                    allPercents = []
+                    for idx, predictCarrera in enumerate(classPredicted[0]):
+                        allPercents.append(round(float(predictCarrera), 2))
+
+                    allPercents, carreras = zip(*sorted(zip(allPercents, carreras), reverse=True))
+                    for idx, percent in enumerate(allPercents):
+                        st.write(f" {percent} % ->  {carreras[idx]} ")
 
                 st.subheader("Gráfico: ")
 
@@ -388,6 +439,96 @@ def show_predict_page():
             st.markdown("\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
                     "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
                     "priorizar los gustos personales y hacer lo que mas te guste.")
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.info("Por favor leer después de disfrutar de los resultados! ")
+    st.info("Solo para gente que haya o esté cursando una carrera universitaria")
+    st.write("")
+
+
+
+    st.write("")
+    st.write(
+        " Para poder ayudarme a mejorar esta IA y poder ser mas precisa necesito mas cantidad de datos, si quieres ayudar a estudiantes indecisos , por favor rellena los datos a continuacion, marca la casilla de consentimiento de datos y darle a Enviar.")
+
+
+    st.markdown("**Hay una pequeña sorpresa si me envías estos datos**!")
+    st.write("")
+    newCarrera = st.selectbox(
+        '¿Cuál es la última carrera que has cursado o estás cursando? (En caso de no encontrar la carrera específica, por favor, escoge la más similar).',
+        ('Por defecto', 'ADE - Administración y Dirección de Empresas', 'Animación', 'Antropología', 'Arqueología', 'Arquitectura', 'Arquitectura Técnica / Ingeniería de la Edificación', 'Artes Escénicas', 'Asistencia en Dirección', 'Astronomía y Astrofísica', 'Bellas Artes', 'Bioinformática - Bioestadística - Biología Computacional', 'Biología', 'Bioquímica', 'Biotecnología', 'Ciberseguridad', 'Ciencia e Ingeniería de Datos', 'Ciencia y Tecnología de los Alimentos', 'Ciencias Ambientales', 'Ciencias Biomédicas', 'Ciencias de la Actividad Física y del Deporte', 'Ciencias del Mar', 'Ciencias Experimentales', 'Ciencias Políticas y de la Administración Pública', 'Cine / Cinematografía', 'Comercio', 'Comunicación', 'Comunicación Audiovisual', 'Conservación y Restauración de Bienes', 'Criminología', 'Culturales', 'Danza', 'Derecho', 'Desarrollo de Aplicaciones Web', 'Diseño', 'Diseño de Interiores', 'Diseño de Moda', 'Diseño de Productos', 'Diseño Digital y Multimedia', 'Diseño gráfico', 'Diseño y Desarrollo de videojuegos', 'Economía', 'Educación Social', 'Emprendimiento', 'Enfermería', 'Enología', 'Estadística', 'Estudios Literarios', 'Farmacia', 'Filosofía', 'Finanzas y Contabilidad', 'Fisioterapia', 'Fotografía', 'Física', 'Física y del Deporte', 'Gastronomía y Ciencias Culinarias', 'Genética', 'Geografía', 'Geografía y Ordenación del Territorio', 'Geología', 'Gestión Aeronáutica', 'Grado Abierto en Artes y Humanidades', 'Grado Abierto en Ciencias Sociales y Jurídicas', 'Grado Abierto en Ingeniería y Arquitectura', 'Historia', 'Historia del Arte', 'Hotelería', 'Humanidades', 'Información y Documentación', 'Ingeniería Aeroespacial', 'Ingeniería Agroambiental', 'Ingeniería Alimentaria', 'Ingeniería Ambiental', 'Ingeniería Biomédica', 'Ingeniería Civil', 'Ingeniería de la Automoción', 'Ingeniería de la Energía', 'Ingeniería de las Industrias Agrarias y Alimentarias', 'Ingeniería de los Materiales', 'Ingeniería de Minas', 'Ingeniería de Sistemas Audiovisuales / Sonido e Imagen', 'Ingeniería de Sistemas Biológicos', 'Ingeniería de Sistemas de Información', 'Ingeniería de Tecnología y Diseño Textil', 'Ingeniería de Telecomunicación (Teleco) y de Sistemas de Comunicación', 'Ingeniería Electrónica', 'Ingeniería Eléctrica', 'Ingeniería en Diseño Industrial y Desarrollo de Producto', 'Ingeniería en Organización Industrial', 'Ingeniería en Tecnologías Industriales', 'Ingeniería Forestal / Ingeniería del Medio Natural', 'Ingeniería Física', 'Ingeniería Geológica', 'Ingeniería Geomática y Topografía', 'Ingeniería Industrial', 'Ingeniería Informática', 'Ingeniería Matemática', 'Ingeniería Mecatrónica', 'Ingeniería Mecánica', 'Ingeniería Naval y Oceánica', 'Ingeniería Náutica y Transporte Marítimo', 'Ingeniería Química', 'Ingeniería Robótica', 'Ingeniería Telemática', 'Ingeniería y desarrollo del Software', 'Lenguas Modernas - Lenguas Clásicas - Filologías', 'Lingüística', 'Logopedia', 'Logística y Ciencias del Transporte', 'Magisterio de Educación Infantil', 'Magisterio de Educación Primaria', 'Marketing', 'Matemáticas', 'Medicina', 'Música', 'Nanociencia y Nanotecnología', 'Nutrición Humana y Dietética', 'Odontología', 'Óptica y Optometría', 'Paisajismo', 'Pedagogía', 'Periodismo', 'Piloto y Dirección de Operaciones Aéreas', 'Podología', 'Protocolo y Organización de Eventos', 'Psicología', 'Publicidad y Relaciones Públicas', 'Química', 'Relaciones Internacionales', 'Relaciones Laborales y Recursos Humanos', 'Seguridad y Control de Riesgos', 'Sociología', 'Teología', 'Terapia Ocupacional', 'Trabajo Social', 'Traducción e Interpretación', 'Turismo', 'Veterinaria'))
+
+    satisfaccion = st.slider('¿Qué nivel de satisfacción tienes respecto a haber cursado esta carrera?', 1, 10, 5)
+    acabado = st.radio("¿Has acabado esta carrera ?",
+                       ["Si",
+                        "Aun no",
+                        "La he dejado"])
+    st.write("")
+    acepta = st.checkbox('Acepto el uso de mis datos')
+    st.error(
+        "IMPORTANTE: Si ya me has enviado los datos a traves de esta pagina, por favor no lo envies mas veces. Perjudicaría a la precision de la IA")
+
+    enviarDatos = st.button("Enviar")
+
+    if enviarDatos:
+        if newCarrera == 'Por defecto':
+            st.error('Por favor, selecciona la carrera que has cursado')
+
+        elif acepta:
+            with st.spinner("Por favor, espera..."):
+                dfEnviar = df;
+                print(dfEnviar)
+                column_Nhermanos = dfEnviar.pop("Nhermanos")
+                column_HermanoMayor = dfEnviar.pop("HermanoMayor")
+                dfEnviar = pd.concat([pd.Series({'HermanoMayor': column_HermanoMayor}), dfEnviar])
+                dfEnviar = pd.concat([pd.Series({'Nhermanos': column_Nhermanos}), dfEnviar])
+
+                for ind, val in dfEnviar.iteritems():
+                    print(ind, val)
+
+                DataEnviar = Preprocess.preprocessingInput(dfEnviar)
+
+                print(DataEnviar.shape)
+                DataEnviar = DataEnviar.T  # Es necesario transponer el Dataframe
+                print(DataEnviar.shape)
+                print(DataEnviar)
+                print("XIAN")
+
+                now = datetime.now()
+                dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
+                print("date and time =", dt_string)
+
+                DataEnviar["UltimaCarrera"] = newCarrera
+                DataEnviar["Satisfaccion"] = satisfaccion
+                DataEnviar["acabado"] = acabado
+                DataEnviar["Fecha"] = dt_string
+                DataEnviar["nombre"] = "prueba"
+                print(DataEnviar.shape)
+                print(DataEnviar)
+
+
+
+                DataEnviar.to_csv("NewDataSet/NewData.csv", mode='a', header=False)
+
+            st.success("Muchas gracias por tu aportación!")
+            st.balloons()
+
+
+
+
+
+        else:
+            st.error('Por favor, acepta las condiciones')
+
+
 
 def changeDtype(Data):
 
