@@ -19,6 +19,8 @@ import CincoCategoriasPruebas
 import MasCarreras
 import Preprocess
 import Informatica
+import PreprocessConNombresBien
+import TodasFlexible
 import VAE
 import VAEPRUEBAS
 
@@ -98,6 +100,7 @@ def show_predict_page():
     datosPrecargados = st.sidebar.selectbox(
         'Quieres probar con datos precargados?',
         ('Por defecto', 'datosXian', 'datosIrene', 'datosZaira', 'datosJavi', 'datosMaite','datosJabe', 'datosMaria'))
+    sorpresa = st.sidebar.checkbox('Selecciona esta opción para BETA')
 
     st.text("")
     st.subheader("""Parte 1 - Indica del 1(nada) al 5(mucho) lo que te gustan los distintos hobbies: """)
@@ -198,10 +201,22 @@ def show_predict_page():
                                                   ["Si", "Tal vez", "No"])
 
     st.text("")
+
+
     option = st.selectbox(
         'Que te gustaría predecir? (Puedes probar las veces que quieras)',
-        ('Por defecto', 'Ramas de conocimiento'))
+        ('Por defecto', 'Ramas de conocimiento','Secreto'))
         #('Por defecto', 'Ramas de conocimiento', 'Informatica o otra'))
+    st.text("")
+    if option == 'Secreto' and sorpresa:
+
+        todasLasCarreras = ['Ingeniería Informática','Biología','Veterinaria','Ingeniería Electrónica','Magisterio de Educación Primaria','Derecho','Enfermería','Lenguas Modernas - Lenguas Clásicas - Filologías','ADE - Administración y Dirección de Empresas','Biotecnología','Ingeniería Aeroespacial','Ciencias de la Actividad Física y del Deporte','Criminología','Información y Documentación','Ciencia y Tecnología de los Alimentos','Magisterio de Educación Infantil','Marketing','Ingeniería de Sistemas de Información','Historia','Ingeniería Mecánica','Fisioterapia','Ingeniería Industrial','Relaciones Laborales y Recursos Humanos','Ingeniería de Telecomunicación (Teleco) y de Sistemas de Comunicación','Turismo','Ciencias Ambientales','Ingeniería Forestal / Ingeniería del Medio Natural','Psicología','Química','Comercio','Educación Social','Ingeniería Agroambiental','Relaciones Internacionales','Economía','Ingeniería de la Energía','Ingeniería Eléctrica','Humanidades','Física','Geografía y Ordenación del Territorio','Historia del Arte','Finanzas y Contabilidad']
+
+        st.caption("Cuanto mas abajo menos precision tienen (Si me envias los datos al final de esta página puedes ayudar a que haya más disponibles ;)")
+        carrerasSeleccionasEntreno = st.multiselect(
+            'Selecciona entre que carreras quieres predecir.',todasLasCarreras )
+
+
     st.text("")
     st.text("")
     ok = st.button("Ver resultados")
@@ -329,42 +344,95 @@ def show_predict_page():
                 "\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
                 "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
                 "priorizar los gustos personales y hacer lo que mas te guste.")
-
-        elif option == 'Informatica o otra':
-            model = load_model('Informatica.h5')
-            classPredicted = model.predict(Data)
-            print("Predict", classPredicted[0])
-            with st.container():
-                nombreCarrera = "Informatica" if classPredicted[0] > 0.5 else "Otra"
-
-                porcentaje = round(float(classPredicted[0]) * 100, 2) if nombreCarrera == "Informatica"else 100 - round(float(classPredicted[0]) * 100, 2)
-                st.subheader(f"La carrera predecida es : {nombreCarrera} con un {porcentaje}%")
+        elif option == 'Secreto':
 
 
-                st.subheader("Gráfico: ")
+            if sorpresa:
+                if len(carrerasSeleccionasEntreno) >= 2:
+                    with st.spinner("Por favor, espera..."):
+                        DataEntreno = pd.read_csv('DataSet/DATATEST-ConNombresBien.csv')
+                        print("DENTROOO")
+
+                        DataEntreno = PreprocessConNombresBien.preprocessingDataset(DataEntreno)
+
+                        classPredicted = TodasFlexible.TestModel(DataEntreno,carrerasSeleccionasEntreno,Data,todasLasCarreras)
 
 
-                carrerasSeleccionadas = ["Informatica", "Otra"]
-                carrerasSeleccionadasPorcentaje = [round(float(classPredicted[0]) * 100, 2), 100 - round(float(classPredicted[0]) * 100, 2)]
+                        print(classPredicted)
+                        print("Predict", classPredicted[0])
 
-                source = pd.DataFrame({"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
+                        classPredicted = classPredicted * 100
 
-                base = alt.Chart(source).mark_arc(innerRadius=50).encode(
-                    theta=alt.Theta("porcentaje", stack=True),
-                    radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
-                    color="Carreras",
-                )
+                        print(classPredicted)
 
-                c1 = base.mark_arc(innerRadius=20, stroke="#fff")
 
-                c2 = base.mark_text(radiusOffset=20).encode(text="porcentaje")
+                        carrerasSeleccionadas = []
+                        carrerasSeleccionadasPorcentaje = []
 
-                c1 + c2
+                        with st.container():
+                            st.subheader("Las carreras predecidas son :")
 
-            st.markdown(
-                "\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
-                "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
-                "priorizar los gustos personales y hacer lo que mas te guste.")
+                            otros = 0.0;
+
+                            for idx, predictCarrera in enumerate(classPredicted[0]):
+                                if float(predictCarrera) > 5:
+                                    carrerasSeleccionadas.append(carrerasSeleccionasEntreno[idx])
+                                    carrerasSeleccionadasPorcentaje.append(round(float(predictCarrera), 2))
+                                    # st.text(f" {round(float(predictCarrera), 2)} % ->  {carrerasSeleccionasEntreno[idx]} ")
+                                else:
+                                    otros += round(float(predictCarrera), 2)
+
+                            if otros != 0:
+                                carrerasSeleccionadas.append("Otras")
+                                carrerasSeleccionadasPorcentaje.append(round(otros, 2))
+
+                            print(carrerasSeleccionadas)
+                            print(carrerasSeleccionadasPorcentaje)
+                            carrerasSeleccionadasPorcentaje, carrerasSeleccionadas = zip(
+                                *sorted(zip(carrerasSeleccionadasPorcentaje, carrerasSeleccionadas), reverse=True))
+                            print(carrerasSeleccionadas)
+                            print(carrerasSeleccionadasPorcentaje)
+
+                            for idx, percent in enumerate(carrerasSeleccionadasPorcentaje):
+                                st.text(f" {percent} % ->  {carrerasSeleccionadas[idx]} ")
+
+                            with st.expander("Clica para el porcentaje de cada Carrera"):
+                                allPercents = []
+                                for idx, predictCarrera in enumerate(classPredicted[0]):
+                                    allPercents.append(round(float(predictCarrera), 2))
+
+                                allPercents, carrerasSeleccionasEntreno = zip(*sorted(zip(allPercents, carrerasSeleccionasEntreno), reverse=True))
+                                for idx, percent in enumerate(allPercents):
+                                    st.write(f" {percent} % ->  {carrerasSeleccionasEntreno[idx]} ")
+
+                            st.subheader("Gráfico: ")
+
+                            source = pd.DataFrame(
+                                {"Carreras": carrerasSeleccionadas, "porcentaje": carrerasSeleccionadasPorcentaje})
+
+                            base = alt.Chart(source).mark_arc(innerRadius=50).encode(
+                                theta=alt.Theta("porcentaje", stack=True),
+                                radius=alt.Radius("porcentaje", scale=alt.Scale(type="sqrt", zero=True, rangeMin=15)),
+                                color="Carreras",
+                            )
+
+                            c1 = base.mark_arc(innerRadius=20, stroke="#fff")
+
+                            c2 = base.mark_text(radiusOffset=20).encode(text="porcentaje")
+
+                            c1 + c2
+
+                        st.markdown(
+                        "\n\nEstos resultados está calculados analizando las caracteristicas principales del alumnado encuestado \n"
+                        "Está pensado para poder ayudar a estudiantes indecisos. Pero siempre se debería "
+                        "priorizar los gustos personales y hacer lo que mas te guste.")
+
+                else:
+                    st.error("Tienes que seleccionar al menos 2 carreras para poder predecir.")
+            else:
+                st.error("BETA, de momento no está disponible para todos.")
+
+
         else:
             model = load_model('TodasModelo.h5')
             classPredicted = model.predict(Data)
@@ -407,7 +475,7 @@ def show_predict_page():
                 for idx, percent in enumerate(carrerasSeleccionadasPorcentaje):
                     st.text(f" {percent} % ->  {carrerasSeleccionadas[idx]} ")
 
-                with st.expander("Clica para el porcentaje de cada Carrera"):
+                with st.expander("Clica para el porcentaje de cada carrera"):
                     allPercents = []
                     for idx, predictCarrera in enumerate(classPredicted[0]):
                         allPercents.append(round(float(predictCarrera), 2))
