@@ -92,7 +92,7 @@ def getRuta(carrerasSeleccionadas,todasCarreras):
     ruta += dt_string
     ruta += ".h5"
 
-    print(ruta)
+    #print(ruta)
     return ruta
 def deleteAllOther(Data, carrerasSeleccionadas):
 
@@ -104,15 +104,15 @@ def deleteAllOther(Data, carrerasSeleccionadas):
 
     Data.loc[Data.borrar != 1, 'borrar'] = 0
 
-    print(Data.shape)
+    #print(Data.shape)
     Data = Data[Data["borrar"] == 1]
 
 
-    print(Data.shape)
-    print(Data.UltimaCarrera.value_counts()[0:10])
+    #print(Data.shape)
+    #print(Data.UltimaCarrera.value_counts()[0:10])
     Data.pop("borrar")
 
-    print(Data.shape)
+    #print(Data.shape)
 
     return Data
 
@@ -122,7 +122,7 @@ def TestModel(Data, carrerasSeleccionadas,DataPredict,todasCarreras):
     #print(Data.UltimaCarrera.value_counts()[40:50])
     ruta= getRuta(carrerasSeleccionadas,todasCarreras)
     if os.path.isfile(ruta):
-        print("ya estaba ;)")
+        print("Ya estaba entrenado este modelo : ",ruta, " , se empieza a predecir.")
         model = load_model(ruta)
         return model.predict(DataPredict)
 
@@ -139,8 +139,8 @@ def TestModel(Data, carrerasSeleccionadas,DataPredict,todasCarreras):
 
 
         X_train.pop("UltimaCarrera")
-        print(X_train.shape)
-        print(y_train.shape)
+        #print(X_train.shape)
+        #print(y_train.shape)
 
 
 
@@ -180,6 +180,7 @@ def TestModel(Data, carrerasSeleccionadas,DataPredict,todasCarreras):
             batch_size=32,
             epochs=300,
             callbacks=[early_stopping],
+            verbose=0
         )
 
         history_df = pd.DataFrame(history.history)
@@ -193,6 +194,6 @@ def TestModel(Data, carrerasSeleccionadas,DataPredict,todasCarreras):
 
 
 
-        print(history_df.iloc[-1])
+        print("Se ha entrenado de forma correcta, con una precision de: ", history_df.iloc[-1]['accuracy'])
 
         return model.predict(DataPredict)

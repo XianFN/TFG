@@ -3,14 +3,13 @@ import numpy as np
 import pandas as pd
 
 def preprocessingDataset(Data):
-    print("holahola")
-    print(Data.columns)
-    print(Data.shape)
+    #print(Data.columns)
+    #print(Data.shape)
 
     missing_values_count = Data.isnull().sum()
 
     # look at the # of missing points in the first ten columns
-    print(missing_values_count[0:10])
+    #print(missing_values_count[0:10])
 
 
     Data.pop("MarcaTemporal")
@@ -20,7 +19,7 @@ def preprocessingDataset(Data):
 
     for ind, year in enumerate(Data.Anho):
         Data.Anho[ind] = 2022 - Data.Anho[ind]
-    print(Data.Anho)
+    #print(Data.Anho)
 
 
 
@@ -69,9 +68,9 @@ def preprocessingDataset(Data):
 
     #print(Data.Compras.value_counts())
 
-    print(Data.columns)
+    #print(Data.columns)
 
-    print(Data.InteresEnTecnologia.value_counts())
+    #print(Data.InteresEnTecnologia.value_counts())
 
     InteresTecnologiaNo = {}
     InteresTecnologiaTalVez = {}
@@ -89,13 +88,13 @@ def preprocessingDataset(Data):
     Data["InteresTecnologiaNo"] = pd.Series(InteresTecnologiaNo)
     Data.pop("InteresEnTecnologia")
 
-    print(Data.InteresTecnologiaTalVez.value_counts())
-    print(Data.InteresTecnologiaNo.value_counts())
+    #print(Data.InteresTecnologiaTalVez.value_counts())
+    #print(Data.InteresTecnologiaNo.value_counts())
 
     asignaturas = ['Matematicas', 'LenguaLiteratura', 'Ingles','Historia', 'EducacionFisica', 'Fisica', 'Quimica', 'DibujoTecnico','AsignaturaTecnologia', 'Filosofia', 'Biologia', 'LatinGriego', 'Frances', 'Religion']
 
     #'''QUITAR
-    print(Data.Matematicas.value_counts())
+    #print(Data.Matematicas.value_counts())
 
     for asignatura in asignaturas:
         ind = 0
@@ -107,7 +106,7 @@ def preprocessingDataset(Data):
 
     #'''
 
-    print(Data.PrefiereRural.value_counts())
+    #print(Data.PrefiereRural.value_counts())
 
     PrefiereRural_ = {}
     PrefiereCiudad = {}
@@ -163,7 +162,7 @@ def preprocessingDataset(Data):
 
 
 
-    print(Data.shape)
+    #print(Data.shape)
 
 
     for ind, NumCarreras in enumerate(Data.NumCarrerasEmpezada):
@@ -186,7 +185,7 @@ def preprocessingDataset(Data):
             copy.NumCarrerasEmpezada = 1;
             Data = Data.append(copy, ignore_index=True)
 
-    print(Data.shape)
+    #print(Data.shape)
 
     #TODO Borrar todas las filas, que la satisfaccion sea menor que 5
 
@@ -230,7 +229,7 @@ def preprocessingDataset(Data):
        'EsNoBinario', 'InteresTecnologiaTalVez', 'InteresTecnologiaNo',
        'PrefiereCiudad', 'PrefiereMaquinas', 'PrefierePersonas'
     '''
-    print(Data.columns)
+    #print(Data.columns)
     columnas = ['AnhoCarrera','Anho', 'EstudiosRelaccionadosConLosPadres', 'EsMujer', 'EsNoBinario' ]
 
     for columna in columnas:
@@ -243,7 +242,7 @@ def preprocessingDataset(Data):
 def preprocessingInput(Data):
 
 
-    print(Data.shape)
+    #print(Data.shape)
 
     #  missing_values_count = Data.isnull().sum()
 
@@ -253,7 +252,7 @@ def preprocessingInput(Data):
 
 
     # COMPROBAR LOS NA TODO
-    print(Data)
+    #print(Data)
 
 
 
@@ -266,11 +265,11 @@ def preprocessingInput(Data):
 
     Data.pop("InteresEnTecnologia")
 
-    print(Data.InteresTecnologiaTalVez)
-    print(Data.InteresTecnologiaNo)
+    #print(Data.InteresTecnologiaTalVez)
+    #print(Data.InteresTecnologiaNo)
 
 
-    print(Data.PrefiereRural)
+    #print(Data.PrefiereRural)
 
     Data["PrefiereRural"] = 1 if Data['PrefiereRural'] == "Rural" else 0
     Data["PrefiereCiudad"] = 1 if Data['PrefiereRural'] == "Ciudad" else 0
@@ -285,7 +284,7 @@ def preprocessingInput(Data):
         Data[columna] = 0 if Data[columna] == "No" else 1
 
 
-    print(Data.Organizada)
+    #print(Data.Organizada)
 
     if Data.Organizada == "No es lo mío.":
         Data.Organizada = 0
@@ -296,14 +295,14 @@ def preprocessingInput(Data):
     elif Data.Organizada == "Mucho, me gusta también planificar asuntos ajenos o grupales.":
         Data.Organizada = 3
 
-    print(Data.Organizada)
+    #print(Data.Organizada)
 
     Data["PrefierePersonas"] =  1 if Data['PrefiereMaquinasOPersonas'] == "Personas" else 0
     Data["PrefiereMaquinas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Máquinas" else 0
 
     Data.pop("PrefiereMaquinasOPersonas")
 
-    print(Data.shape)
+    #print(Data.shape)
 
     DataDF = pd.DataFrame(data=Data)
 
