@@ -21,148 +21,71 @@ def preprocessingDataset(Data):
         Data.Anho[ind] = 2022 - Data.Anho[ind]
     #print(Data.Anho)
 
-
-
-    #print(Data.Genero.value_counts())
-    EsMujer={}
+    EsMujer = {}
     EsNoBinario = {}
-    for ind, genero in enumerate(Data.Genero):
+    InteresTecnologiaTalVez = {}
+    InteresTecnologiaNo = {}
+    PrefiereRural_ = {}
+    PrefiereCiudad = {}
+    PrefierePersonas = {}
+    PrefiereMaquinas = {}
 
-        if Data.Genero[ind] == "Mujer":
-            EsMujer[ind] = 1
-        else:
-            EsMujer[ind] = 0
+    for ind, persona in Data.iterrows():
 
-        if Data.Genero[ind] == "Prefiero no contestar" or Data.Genero[ind] == "Género no binario":
-            EsNoBinario[ind] = 1
-        else:
-            EsNoBinario[ind] = 0
+        EsMujer[ind] = 1 if persona['Genero'] == "Mujer" else 0
+        EsNoBinario[ind] = 1 if persona['Genero'] == "Prefiero no contestar" or persona['Genero'] == "Género no binario" else 0
+        Data["Nhermanos"][ind] = 6 if persona["Nhermanos"] == "+5" else persona["Nhermanos"]
+        Data["HermanoMayor"][ind] = 1 if persona["HermanoMayor"] else 0
+        InteresTecnologiaTalVez[ind] = 1 if persona['InteresEnTecnologia'] == "Un poco" else 0
+        InteresTecnologiaNo[ind] = 1 if persona['InteresEnTecnologia'] == "No" else 0
+        PrefiereRural_[ind] = 1 if persona['PrefiereRural'] == "Rural" else 0
+        PrefiereCiudad[ind] = 1 if persona['PrefiereRural'] == "Ciudad" else 0
+
+
+
+
+
+        asignaturas = ['Matematicas', 'LenguaLiteratura', 'Ingles', 'Historia', 'EducacionFisica', 'Fisica', 'Quimica',
+                       'DibujoTecnico', 'AsignaturaTecnologia', 'Filosofia', 'Biologia', 'LatinGriego', 'Frances',
+                       'Religion']
+        for asignatura in asignaturas:
+            Data[asignatura][ind] = 0 if persona[asignatura] == "No la cursé" else persona[asignatura]
+
+        columnas = ['EstudiosRelaccionadosConLosPadres', 'IrseDeEspanha', 'CuidarPersonas', 'EscucharPersonas',
+                    'CuidarAnimales', 'Sociable', 'Creativo', 'EfectoNegativoSangre']
+        for columna in columnas:
+            Data[columna][ind] = 0 if persona[columna] == "No" else 1
+
+        if persona.Organizada == "No es lo mío.":
+            Data["Organizada"][ind] = 0
+        elif persona.Organizada == "Lo mínimo para alcanzar mis objetivos.":
+            Data["Organizada"][ind] = 1
+        elif persona.Organizada == "Bastante, organizo mis asuntos personales.":
+            Data["Organizada"][ind] = 2
+        elif persona.Organizada == "Mucho, me gusta también planificar asuntos ajenos o grupales.":
+            Data["Organizada"][ind] = 3
+
+        PrefierePersonas[ind] = 1 if persona['PrefiereMaquinasOPersonas'] == "Personas" else 0
+        PrefiereMaquinas[ind] = 1 if persona['PrefiereMaquinasOPersonas'] == "Máquinas" else 0
+
 
 
     Data["EsMujer"] = pd.Series(EsMujer)
     Data["EsNoBinario"] = pd.Series(EsNoBinario)
-    #print(Data.EsMujer)
-    #print(Data.EsNoBinario)
-    Data.pop("Genero")
-
-    #print(Data.Nhermanos.value_counts())
-    # COMPROBAR LOS NA TODO
-    for ind, Nhermanos in enumerate(Data.Nhermanos):
-        if Data.Nhermanos[ind] == "Prefiero no contestar":
-            Data.Nhermanos[ind] = 0
-        elif Data.Nhermanos[ind] == "+5":
-            Data.Nhermanos[ind] = 6
-    #print(Data.Nhermanos.value_counts())
-
-    #print(Data.HermanoMayor.value_counts())
-
-    #COMPROBAR LOS NA TODO
-
-    for ind, hermanoMayor in enumerate(Data.HermanoMayor):
-        if Data.HermanoMayor[ind] == "No":
-            Data.HermanoMayor[ind] = 0
-        else:
-            Data.HermanoMayor[ind] = 1
-
-    #print(Data.HermanoMayor.value_counts())
-
-    #print(Data.Compras.value_counts())
-
-    #print(Data.columns)
-
-    #print(Data.InteresEnTecnologia.value_counts())
-
-    InteresTecnologiaNo = {}
-    InteresTecnologiaTalVez = {}
-    for ind, interes in enumerate(Data.InteresEnTecnologia):
-        InteresTecnologiaNo[ind] = 0
-        InteresTecnologiaTalVez[ind] = 0
-        if Data.InteresEnTecnologia[ind] == "Un poco":
-            InteresTecnologiaNo[ind] = 0
-            InteresTecnologiaTalVez[ind] = 1
-        elif Data.InteresEnTecnologia[ind] == "No":
-            InteresTecnologiaNo[ind] = 1
-            InteresTecnologiaTalVez[ind] = 0
-
     Data["InteresTecnologiaTalVez"] = pd.Series(InteresTecnologiaTalVez)
     Data["InteresTecnologiaNo"] = pd.Series(InteresTecnologiaNo)
-    Data.pop("InteresEnTecnologia")
-
-    #print(Data.InteresTecnologiaTalVez.value_counts())
-    #print(Data.InteresTecnologiaNo.value_counts())
-
-    asignaturas = ['Matematicas', 'LenguaLiteratura', 'Ingles','Historia', 'EducacionFisica', 'Fisica', 'Quimica', 'DibujoTecnico','AsignaturaTecnologia', 'Filosofia', 'Biologia', 'LatinGriego', 'Frances', 'Religion']
-
-    #'''QUITAR
-    #print(Data.Matematicas.value_counts())
-
-    for asignatura in asignaturas:
-        ind = 0
-        for ind, persona in enumerate(Data[asignatura]):
-            if persona == "No la cursé":
-                Data[asignatura][ind] = 0
-        #print(Data[asignatura].value_counts())
-
-
-    #'''
-
-    #print(Data.PrefiereRural.value_counts())
-
-    PrefiereRural_ = {}
-    PrefiereCiudad = {}
-    for ind, preferencia in enumerate(Data.PrefiereRural):
-        PrefiereRural_[ind] = 0
-        PrefiereCiudad[ind] = 0
-        if preferencia == "Rural":
-            PrefiereCiudad[ind] = 0
-            PrefiereRural_[ind] = 1
-        elif preferencia == "Ciudad":
-            PrefiereCiudad[ind] = 1
-            PrefiereRural_[ind] = 0
-
     Data["PrefiereRural"] = pd.Series(PrefiereRural_)
     Data["PrefiereCiudad"] = pd.Series(PrefiereCiudad)
-
-    # COMPROBAR que todas las columans se pueda usar así los NA TODO
-
-    columnas=['EstudiosRelaccionadosConLosPadres', 'IrseDeEspanha','CuidarPersonas', 'EscucharPersonas', 'CuidarAnimales', 'Sociable', 'Creativo', 'EfectoNegativoSangre' ]
-    for columna in columnas:
-        ind = 0
-        for ind, persona in enumerate(Data[columna]):
-            if persona == "No":
-                Data[columna][ind] = 0
-            else:
-                Data[columna][ind] = 1
-
-
-    for ind, persona in enumerate(Data.Organizada):
-        if persona == "No es lo mío.":
-            Data.Organizada[ind] = 0
-        elif persona == "Lo mínimo para alcanzar mis objetivos.":
-            Data.Organizada[ind] = 1
-        elif persona == "Bastante, organizo mis asuntos personales.":
-            Data.Organizada[ind] = 2
-        elif persona == "Mucho, me gusta también planificar asuntos ajenos o grupales.":
-            Data.Organizada[ind] = 3
-
-    PrefiereMaquinas = {}
-    PrefierePersonas = {}
-    for ind, persona in enumerate(Data.PrefiereMaquinasOPersonas):
-        PrefiereMaquinas[ind] = 0
-        PrefierePersonas[ind] = 0
-        if persona == "Personas":
-            PrefierePersonas[ind] = 1
-        elif persona == "Máquinas":
-            PrefiereMaquinas[ind] = 1
-
-
     Data["PrefiereMaquinas"] = pd.Series(PrefiereMaquinas)
     Data["PrefierePersonas"] = pd.Series(PrefierePersonas)
+
+
+    Data.pop("Genero")
+    Data.pop("InteresEnTecnologia")
     Data.pop("PrefiereMaquinasOPersonas")
 
 
 
-    #print(Data.shape)
 
 
     for ind, NumCarreras in enumerate(Data.NumCarrerasEmpezada):
@@ -187,7 +110,8 @@ def preprocessingDataset(Data):
 
     #print(Data.shape)
 
-    #TODO Borrar todas las filas, que la satisfaccion sea menor que 5
+
+    Data = Data[Data["UltimaSatisfaccion"] >= 4]
 
     #printColumnValues(Data)
 
@@ -202,7 +126,7 @@ def preprocessingDataset(Data):
     Data.pop("UltimaSatisfaccion")
     Data.pop("NumCarrerasEmpezada")
 
-    changeDtype(Data)
+
     #print(Data.dtypes)
     # Empeora con 'Compras',
     #        'EscapeRooms', 'Animales', 'Coches'
@@ -235,6 +159,9 @@ def preprocessingDataset(Data):
     for columna in columnas:
         Data.pop(columna)
 
+    printColumnValues(Data)
+
+    changeDtype(Data)
 
     return Data
 
@@ -258,6 +185,7 @@ def preprocessingInput(Data):
 
     Data.HermanoMayor = 1 if Data.HermanoMayor else 0
 
+    Data["Nhermanos"] = 6 if Data["Nhermanos"] > 5 else Data["Nhermanos"]
 
 
     Data["InteresTecnologiaTalVez"] = 1 if Data['InteresEnTecnologia'] == "Un poco" else 0
@@ -297,7 +225,7 @@ def preprocessingInput(Data):
 
     #print(Data.Organizada)
 
-    Data["PrefierePersonas"] =  1 if Data['PrefiereMaquinasOPersonas'] == "Personas" else 0
+    Data["PrefierePersonas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Personas" else 0
     Data["PrefiereMaquinas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Máquinas" else 0
 
     Data.pop("PrefiereMaquinasOPersonas")

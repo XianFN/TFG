@@ -4,27 +4,24 @@ import pandas as pd
 
 def preprocessingDataset(Data):
 
-    #print(Data.columns)
-    #print(Data.shape)
 
-    missing_values_count = Data.isnull().sum()
+    #Comprobar si tenemos datos nulos
 
-    # look at the # of missing points in the first ten columns
+    #missing_values_count = Data.isnull().sum()
     #print(missing_values_count[0:10])
 
+    #Borro las columnas de marcaTemporal y que aceptó el consentimiento de datos ademas de renombrar la columna de Tecnologia.1 ya que existian 2 parecidas
 
     Data.pop("MarcaTemporal")
     Data.pop("ConsentimientoDatos")
     Data = Data.rename(columns={'Tecnologia.1': 'AsignaturaTecnologia'})
 
-
+    #Cálculo de los años
     for ind, year in enumerate(Data.Anho):
         Data.Anho[ind] = 2022 - Data.Anho[ind]
-    #print(Data.Anho)
 
 
-
-    #print(Data.Genero.value_counts())
+    #Dividir el género
     EsMujer={}
     EsNoBinario = {}
     for ind, genero in enumerate(Data.Genero):
@@ -42,20 +39,18 @@ def preprocessingDataset(Data):
 
     Data["EsMujer"] = pd.Series(EsMujer)
     Data["EsNoBinario"] = pd.Series(EsNoBinario)
-    #print(Data.EsMujer)
-    #print(Data.EsNoBinario)
     Data.pop("Genero")
 
-    #print(Data.Nhermanos.value_counts())
-    # COMPROBAR LOS NA TODO
+
+
+    # Normalizacion de los numero de hermanos
     for ind, Nhermanos in enumerate(Data.Nhermanos):
         if Data.Nhermanos[ind] == "Prefiero no contestar":
             Data.Nhermanos[ind] = 0
         elif Data.Nhermanos[ind] == "+5":
             Data.Nhermanos[ind] = 6
-    #print(Data.Nhermanos.value_counts())
 
-    #print(Data.HermanoMayor.value_counts())
+
 
     #COMPROBAR LOS NA TODO
 
@@ -186,11 +181,10 @@ def preprocessingDataset(Data):
             copy.NumCarrerasEmpezada = 1;
             Data = Data.append(copy, ignore_index=True)
 
-    #print(Data.shape)
 
-    #TODO Borrar todas las filas, que la satisfaccion sea menor que 5
+    Data = Data[Data["UltimaSatisfaccion"] >= 4]
 
-    #printColumnValues(Data)
+
 
 
     Data.pop("AntepenultimaSatisfaccion")

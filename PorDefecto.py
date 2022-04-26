@@ -30,65 +30,56 @@ def changeDtype(Data):
     for column in Data:
         Data[column] = Data[column].astype(np.float32)
 
-def separarCarreras(y):
+
+
+def separarCarreras(y,carrerasSeleccionadas):
 
     y = pd.DataFrame(y, columns=["UltimaCarrera"])
 
-    CarrInformatica = y['UltimaCarrera'].map({"IngenierÃ­a InformÃ¡tica": 1}).fillna(0)
-    CarrBiologia = y['UltimaCarrera'].map({"BiologÃ­a": 1}).fillna(0)
-    CarrVeterinaria = y['UltimaCarrera'].map({"Veterinaria": 1}).fillna(0)
-    CarrElectronica = y['UltimaCarrera'].map({"IngenierÃ­a ElectrÃ³nica": 1}).fillna(0)
-    CarrMagisterio = y['UltimaCarrera'].map({"Magisterio de EducaciÃ³n Primaria": 1}).fillna(0)
-    CarrDerecho = y['UltimaCarrera'].map({"Derecho": 1}).fillna(0)
-    CarrEnfermeria = y['UltimaCarrera'].map({"EnfermerÃ­a": 1}).fillna(0)
-    CarrFilologia = y['UltimaCarrera'].map({"Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as": 1}).fillna(0)
-    CarrADE = y['UltimaCarrera'].map({"ADE - AdministraciÃ³n y DirecciÃ³n de Empresas": 1}).fillna(0)
-    CarrBiotecn = y['UltimaCarrera'].map({"BiotecnologÃ­a": 1}).fillna(0)
-    CarrAeroesp = y['UltimaCarrera'].map({"IngenierÃ­a Aeroespacial": 1}).fillna(0)
-    CarrDeporte = y['UltimaCarrera'].map({"Ciencias de la Actividad FÃ­sica y del Deporte": 1}).fillna(0)
-
-    CarrOtra = y['UltimaCarrera'].map({"Ciencias de la Actividad FÃ­sica y del Deporte": 0, "IngenierÃ­a InformÃ¡tica": 0, "BiologÃ­a": 0,"Veterinaria": 0 , "IngenierÃ­a ElectrÃ³nica": 0,
-                                    "Magisterio de EducaciÃ³n Primaria": 0 , "Derecho": 0, "EnfermerÃ­a": 0 , "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as": 0, "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas": 0, "BiotecnologÃ­a": 0, "IngenierÃ­a Aeroespacial": 0 , "Ciencias de la Actividad FÃ­sica y del Deporte": 0 }).fillna(1)
-
-    #CarrOtra = [CarrInformatica or CarrBiologia or CarrVeterinaria or CarrElectronica or CarrMagisterio or CarrDerecho
-     #           or CarrEnfermeria or CarrFilologia or CarrADE or CarrBiotecn or CarrAeroesp or CarrDeporte]
-
-    y["CarrInformatica"] = CarrInformatica
-    y["CarrBiologia"] = CarrBiologia
-    y["CarrVeterinaria"] = CarrVeterinaria
-    y["CarrElectronica"] = CarrElectronica
-    y["CarrMagisterio"] = CarrMagisterio
-    y["CarrDerecho"] = CarrDerecho
-    y["CarrEnfermeria"] = CarrEnfermeria
-    y["CarrFilologia"] = CarrFilologia
-    y["CarrADE"] = CarrADE
-    y["CarrBiotecn"] = CarrBiotecn
-    y["CarrAeroesp"] = CarrAeroesp
-    y["CarrDeporte"] = CarrDeporte
-
-
-   #print(CarrOtra)
-    y["CarrOtra"] = CarrOtra
+    for idx, carrera in enumerate(carrerasSeleccionadas):
+        y[carrera] = y.UltimaCarrera == carrera
 
     y.drop('UltimaCarrera', inplace=True, axis=1)
 
     changeDtype(y)
 
-  #  printColumnValues(y)
-
     return y
 
+def deleteAllOther(Data, carrerasSeleccionadas):
 
+
+    Data["borrar"] = Data['UltimaCarrera']
+    for carrera in carrerasSeleccionadas:
+        Data.loc[Data.borrar == carrera, 'borrar'] = 1
+
+
+    Data.loc[Data.borrar != 1, 'borrar'] = 0
+
+    Data = Data[Data["borrar"] == 1]
+
+    Data.pop("borrar")
+
+    return Data
 
 def TestModel(Data):
+
+    carrerasSeleccionadas = ["Ingeniería Informática", "Biología", "Veterinaria", "Ingeniería Electrónica",
+                             "Magisterio de Educación Primaria", "Derecho", "Enfermería",
+                             "Lenguas Modernas - Lenguas Clásicas - Filologías",
+                             "ADE - Administración y Dirección de Empresas", "Biotecnología", "Ingeniería Aeroespacial",
+                             "Ciencias de la Actividad Física y del Deporte"]
+
+    Data = deleteAllOther(Data, carrerasSeleccionadas)
 
     X_train = Data.sample(frac=0.75, random_state=200)
 
     X_test = Data.drop(X_train.index)
 
-    y_train = X_train.UltimaCarrera
-    y_test = X_test.UltimaCarrera
 
+    y_train = separarCarreras(X_train.UltimaCarrera, carrerasSeleccionadas)
+    y_test = separarCarreras(X_test.UltimaCarrera, carrerasSeleccionadas)
+
+    '''
     yprueba= y_train
     yprueba = y_train.map(
         {"Ciencias de la Actividad FÃ­sica y del Deporte": 1, "IngenierÃ­a InformÃ¡tica": 2, "BiologÃ­a": 3,
@@ -96,9 +87,7 @@ def TestModel(Data):
          "Magisterio de EducaciÃ³n Primaria": 6, "Derecho": 7, "EnfermerÃ­a": 8,
          "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as": 9, "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas": 10,
          "BiotecnologÃ­a": 11, "IngenierÃ­a Aeroespacial": 12}).fillna(0)
-
-    y_train = separarCarreras(y_train)
-    y_test = separarCarreras(y_test)
+    '''
 
 
     X_test.pop("UltimaCarrera")
@@ -139,11 +128,11 @@ def TestModel(Data):
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
-        layers.Dense(13, activation='softmax'),
+        layers.Dense(12, activation='softmax'),
     ])
 
     early_stopping = callbacks.EarlyStopping(
-        monitor='val_accuracy',
+        monitor='val_loss',
         min_delta=0.005,
         patience=20,
 

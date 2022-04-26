@@ -13,16 +13,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import ADASYN
 
-def getMinAndMaxForReturn(history):
 
-#NOT USED
-    ret = []
-    ret['accuracy']= history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-
-    return ret
 
 def printColumnValues(Data):
 

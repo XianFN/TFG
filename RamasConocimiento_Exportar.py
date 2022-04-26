@@ -9,17 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import ADASYN
 
-def getMinAndMaxForReturn(history):
-
-#NOT USED
-    ret = []
-    ret['accuracy']= history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-
-    return ret
-
 def printColumnValues(Data):
 
     for column in Data:
@@ -31,102 +20,49 @@ def changeDtype(Data):
         Data[column] = Data[column].astype(np.float32)
 
 
-def separarCarreras(y):
+def separarCarreras(y,carrerasSeleccionadas):
 
     y = pd.DataFrame(y, columns=["UltimaCarrera"])
 
-    artes_humanidades = y['UltimaCarrera'].map({"ArtHum": 1}).fillna(0)
-    ciencias = y['UltimaCarrera'].map({"Ciencias": 1}).fillna(0)
-    ciencias_salud = y['UltimaCarrera'].map({"CienciasSalud": 1}).fillna(0)
-    ciencias_sociales_juridicas = y['UltimaCarrera'].map({"CienciasSociales": 1}).fillna(0)
-    ingenieria_arquitectura = y['UltimaCarrera'].map({"IngArq": 1}).fillna(0)
-
-
-    CarrOtra = y['UltimaCarrera'].map({"ArtHum": 0, "Ciencias": 0, "CienciasSalud": 0,"CienciasSociales": 0 , "IngArq": 0 }).fillna(1)
-
-    #CarrOtra = [CarrInformatica or CarrBiologia or CarrVeterinaria or CarrElectronica or CarrMagisterio or CarrDerecho
-     #           or CarrEnfermeria or CarrFilologia or CarrADE or CarrBiotecn or CarrAeroesp or CarrDeporte]
-
-    y["artes_humanidades"] = artes_humanidades
-    y["ciencias"] = ciencias
-    y["ciencias_salud"] = ciencias_salud
-    y["ciencias_sociales_juridicas"] = ciencias_sociales_juridicas
-    y["ingenieria_arquitectura"] = ingenieria_arquitectura
-    y["otra"] = CarrOtra
-
-
-
+    for idx, carrera in enumerate(carrerasSeleccionadas):
+        y[carrera] = y.UltimaCarrera == carrera
 
     y.drop('UltimaCarrera', inplace=True, axis=1)
 
     changeDtype(y)
 
-   # printColumnValues(y)
-
-
-
-    #TODO CAMBIAR!!! Cambiar tambien en anteriores, no se están borrando los de otros, se dejan, MAL
-
-    ''''
-    print(y.shape)
-    newy = y[y["otra"] == 0]
-    print(newy)
-
-    print(newy.shape)
-    '''
     return y
 
+def deleteAllOther(Data, carrerasSeleccionadas):
+
+
+    Data["borrar"] = Data['UltimaCarrera']
+    for carrera in carrerasSeleccionadas:
+        Data.loc[Data.borrar == carrera, 'borrar'] = 1
+
+
+    Data.loc[Data.borrar != 1, 'borrar'] = 0
+
+    Data = Data[Data["borrar"] == 1]
+
+    Data.pop("borrar")
+
+    return Data
 
 
 def TestModel(Data):
 
-
-
-
-
+    carrerasSeleccionadas = ["ArtHum", "Ciencias", "CienciasSalud","CienciasSociales", "IngArq"]
+    Data = deleteAllOther(Data, carrerasSeleccionadas)
 
     X_train = Data
 
 
-
-
-
-
-
-
-    y_train = X_train.UltimaCarrera
-
-
-
-
-    y_train = separarCarreras(y_train)
-
-
-
+    y_train = separarCarreras(X_train.UltimaCarrera)
 
     X_train.pop("UltimaCarrera")
 
-    print(y_train.value_counts()[0:10])
 
-    print("XIAN ANTES")
-    print(X_train.shape)
-    print(y_train.shape)
-
-    X_train = X_train[y_train["otra"] == 0]
-    y_train = y_train[y_train["otra"] == 0]
-
-    y_train.drop('otra', inplace=True, axis=1)
-
-    print(X_train.shape)
-    print(y_train.shape)
-
-
-
-
-
-
-    print('YCOLUMNS')
-    print(y_train.columns)
     input = len(X_train.columns)
 
     model = keras.Sequential([

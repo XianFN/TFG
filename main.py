@@ -1,36 +1,25 @@
-import tensorflow as tf
 import numpy as np
 import pandas as pd
-from tensorflow import keras
-from keras import layers
-from keras import callbacks
-from sklearn.preprocessing import Normalizer
-import matplotlib.pyplot as plt
-import pickle
 import streamlit as st
-import time
 from keras.models import load_model
 import altair as alt
 from PIL import Image
 from datetime import datetime
 
-import CincoCategorias
-import CincoCategoriasPruebas
-import MasCarreras
-import Preprocess
-import Informatica
+from Obsolete import Preprocess
 import PreprocessConNombresBien
-import TodasFlexible
-import VAE
-import VAEPRUEBAS
+import Flexible
+import PorDefecto
 
 
 def Train():
     #TODO CUIDADOOOO
     #Data = pd.read_csv('DataSet/DATATEST-2.csv')
-    Data = pd.read_csv('DataSet/DATATEST_CincoCategorias.csv')
+    Data = pd.read_csv('DataSet/DATATEST-ConNombresBien.csv')
+    #Data = pd.read_csv('DataSet/DATATEST_CincoCategorias.csv')
 
-    Data = Preprocess.preprocessingDataset(Data)
+    #Data = Preprocess.preprocessingDataset(Data)
+    Data = PreprocessConNombresBien.preprocessingDataset(Data)
 
     # print(Data["UltimaCarrera"].value_counts()[0:10])
 
@@ -41,15 +30,15 @@ def Train():
     AllVal_Accuracy = 0.0
     AllVal_Loss = 0.0
 
-    NumIterations = 1
+    NumIterations = 5
 
     for x in range(0, NumIterations):
         #ret = Informatica.TestModel(Data)
         # ret = MasCarreras.TestModel(Data)
-        #ret = CincoCategorias.TestModel(Data)
-        ret = CincoCategoriasPruebas.TestModel(Data)
-        #ret = VAE.TestModel(Data)
-        #ret = VAEPRUEBAS.TestModel(Data)
+        #ret = RamasConocimiento.TestModel(Data)
+        #ret = RamasConocimiento_Exportar.TestModel(Data)
+        ret = PorDefecto.TestModel(Data)
+        #ret = PorDefecto_Exportar.TestModel(Data)
 
         AllLoss += ret['loss']
         AllAccuracy += ret['accuracy']
@@ -512,7 +501,7 @@ def show_predict_page():
 
                         DataEntreno = PreprocessConNombresBien.preprocessingDataset(DataEntreno)
 
-                        classPredicted = TodasFlexible.TestModel(DataEntreno, carrerasSeleccionasEntreno, Data,
+                        classPredicted = Flexible.TestModel(DataEntreno, carrerasSeleccionasEntreno, Data,
                                                                  todasLasCarreras)
 
                         #print(classPredicted)
@@ -697,7 +686,7 @@ def changeDtype(Data):
 
 
 
-show_predict_page()
-#Train()
+#show_predict_page()
+Train()
 
 
