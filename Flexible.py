@@ -78,7 +78,7 @@ def getRuta(carrerasSeleccionadas,todasCarreras):
         ruta += toHex(Decimal)
 
     now = datetime.now()
-    dt_string = now.strftime("_%d-%m-%Y")
+    dt_string = now.strftime("_%m-%Y")
 
     ruta += dt_string
     ruta += ".h5"

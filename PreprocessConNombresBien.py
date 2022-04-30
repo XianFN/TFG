@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 def preprocessingDataset(Data):
+
     #print(Data.columns)
     #print(Data.shape)
 
@@ -19,7 +20,7 @@ def preprocessingDataset(Data):
 
     for ind, year in enumerate(Data.Anho):
         Data.Anho[ind] = 2022 - Data.Anho[ind]
-    #print(Data.Anho)
+
 
     EsMujer = {}
     EsNoBinario = {}
@@ -108,12 +109,11 @@ def preprocessingDataset(Data):
             copy.NumCarrerasEmpezada = 1;
             Data = Data.append(copy, ignore_index=True)
 
-    #print(Data.shape)
+
 
 
     Data = Data[Data["UltimaSatisfaccion"] >= 4]
 
-    #printColumnValues(Data)
 
 
     Data.pop("AntepenultimaSatisfaccion")
@@ -127,13 +127,9 @@ def preprocessingDataset(Data):
     Data.pop("NumCarrerasEmpezada")
 
 
-    #print(Data.dtypes)
-    # Empeora con 'Compras',
-    #        'EscapeRooms', 'Animales', 'Coches'
+
     '''
-    missing_values_count = Data.isnull().sum()
-    # look at the # of missing points in the first ten columns
-    print(missing_values_count[20:30])
+
     
     'Anho', 'AnhoCarrera', 'Nhermanos', 'HermanoMayor', 'Compras',
        'EscapeRooms', 'Animales', 'Coches', 'Cocinar', 'SalirConAmigos',
@@ -153,7 +149,7 @@ def preprocessingDataset(Data):
        'EsNoBinario', 'InteresTecnologiaTalVez', 'InteresTecnologiaNo',
        'PrefiereCiudad', 'PrefiereMaquinas', 'PrefierePersonas'
     '''
-    #print(Data.columns)
+
     columnas = ['AnhoCarrera','Anho', 'EstudiosRelaccionadosConLosPadres', 'EsMujer', 'EsNoBinario' ]
 
     for columna in columnas:
@@ -169,18 +165,6 @@ def preprocessingDataset(Data):
 def preprocessingInput(Data):
 
 
-    #print(Data.shape)
-
-    #  missing_values_count = Data.isnull().sum()
-
-    # look at the # of missing points in the first ten columns
-    #     print(missing_values_count[0:10])
-
-
-
-    # COMPROBAR LOS NA TODO
-    #print(Data)
-
 
 
     Data.HermanoMayor = 1 if Data.HermanoMayor else 0
@@ -193,26 +177,16 @@ def preprocessingInput(Data):
 
     Data.pop("InteresEnTecnologia")
 
-    #print(Data.InteresTecnologiaTalVez)
-    #print(Data.InteresTecnologiaNo)
-
-
-    #print(Data.PrefiereRural)
 
     Data["PrefiereRural"] = 1 if Data['PrefiereRural'] == "Rural" else 0
     Data["PrefiereCiudad"] = 1 if Data['PrefiereRural'] == "Ciudad" else 0
 
-
-
-    # COMPROBAR que todas las columans se pueda usar así los NA TODO
 
     columnas = ['IrseDeEspanha', 'CuidarPersonas', 'EscucharPersonas',
                 'CuidarAnimales', 'Sociable', 'Creativo', 'EfectoNegativoSangre']
     for columna in columnas:
         Data[columna] = 0 if Data[columna] == "No" else 1
 
-
-    #print(Data.Organizada)
 
     if Data.Organizada == "No es lo mío.":
         Data.Organizada = 0
@@ -223,14 +197,12 @@ def preprocessingInput(Data):
     elif Data.Organizada == "Mucho, me gusta también planificar asuntos ajenos o grupales.":
         Data.Organizada = 3
 
-    #print(Data.Organizada)
+
 
     Data["PrefierePersonas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Personas" else 0
     Data["PrefiereMaquinas"] = 1 if Data['PrefiereMaquinasOPersonas'] == "Máquinas" else 0
 
     Data.pop("PrefiereMaquinasOPersonas")
-
-    #print(Data.shape)
 
     DataDF = pd.DataFrame(data=Data)
 

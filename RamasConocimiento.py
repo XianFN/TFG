@@ -56,7 +56,7 @@ def TestModel(Data):
     Data = deleteAllOther(Data, carrerasSeleccionadas)
 
 
-    X_train = Data.sample(frac=0.75, random_state=200)
+    X_train = Data.sample(frac=0.50, random_state=200)
 
     X_test = Data.drop(X_train.index)
 
@@ -72,7 +72,7 @@ def TestModel(Data):
     input = len(X_train.columns)
 
     model = keras.Sequential([
-        layers.Dense(75, input_shape=[input]),
+        layers.Dense(20, input_shape=[input]),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
@@ -97,14 +97,13 @@ def TestModel(Data):
         X_train, y_train,
         validation_data=(X_test, y_test),
         batch_size=32,
-        epochs=500,
+        epochs=300,
         callbacks=[early_stopping],
     )
 
     history_df = pd.DataFrame(history.history)
 
 
-    #model.save('TodasModelo.h5')
 
 
     plt.title("Training and validation loss results")
@@ -122,5 +121,4 @@ def TestModel(Data):
 
 
     print(history_df.iloc[-1])
-    #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
     return history_df.iloc[-1]

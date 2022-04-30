@@ -1,0 +1,349 @@
+
+1- Por Defecto:
+
+____________________________________________________________________________________________
+Guardado, con una precision del :  46.315789222717285 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_46.32%_04-2022.h5
+loss            1.385461
+accuracy        0.531469
+val_loss        1.853512
+val_accuracy    0.463158
+Name: 103, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  46.315789222717285 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_46.32%_04-2022.h5
+loss            1.170263
+accuracy        0.604895
+val_loss        1.767959
+val_accuracy    0.463158
+Name: 122, dtype: float64
+Guardado, con un loss del :  1.8353997468948364  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.84_04-2022.h5
+loss            1.337930
+accuracy        0.590909
+val_loss        1.835400
+val_accuracy    0.421053
+Name: 83, dtype: float64
+Guardado, con un loss del :  1.7812151908874512  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.78_04-2022.h5
+loss            1.207771
+accuracy        0.580420
+val_loss        1.781215
+val_accuracy    0.442105
+Name: 112, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  46.315789222717285 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_46.32%_04-2022.h5
+loss            1.361884
+accuracy        0.545455
+val_loss        1.874359
+val_accuracy    0.463158
+Name: 97, dtype: float64
+Guardado, con un loss del :  1.8617451190948486  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.86_04-2022.h5
+loss            1.442023
+accuracy        0.468531
+val_loss        1.861745
+val_accuracy    0.336842
+Name: 107, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  45.26315927505493 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_45.26%_04-2022.h5
+loss            1.263984
+accuracy        0.569930
+val_loss        1.882352
+val_accuracy    0.452632
+Name: 87, dtype: float64
+Guardado, con un loss del :  1.790971279144287  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.79_04-2022.h5
+loss            1.431185
+accuracy        0.538462
+val_loss        1.790971
+val_accuracy    0.357895
+Name: 92, dtype: float64
+Guardado, con un loss del :  1.8332542181015015  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.83_04-2022.h5
+loss            1.290628
+accuracy        0.541958
+val_loss        1.833254
+val_accuracy    0.315789
+Name: 111, dtype: float64
+Guardado, con un loss del :  1.8464115858078003  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.85_04-2022.h5
+loss            1.269753
+accuracy        0.576923
+val_loss        1.846412
+val_accuracy    0.442105
+Name: 88, dtype: float64
+Guardado, con un loss del :  1.8613102436065674  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.86_04-2022.h5
+loss            1.355149
+accuracy        0.489510
+val_loss        1.861310
+val_accuracy    0.400000
+Name: 106, dtype: float64
+Guardado, con un loss del :  1.8344324827194214  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.83_04-2022.h5
+loss            1.260897
+accuracy        0.545455
+val_loss        1.834432
+val_accuracy    0.410526
+Name: 112, dtype: float64
+Guardado, con un loss del :  1.7902382612228394  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.79_04-2022.h5
+loss            1.265470
+accuracy        0.569930
+val_loss        1.790238
+val_accuracy    0.431579
+Name: 108, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  45.26315927505493 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_45.26%_04-2022.h5
+loss            1.310273
+accuracy        0.562937
+val_loss        1.853542
+val_accuracy    0.452632
+Name: 113, dtype: float64
+Guardado, con un loss del :  1.7651329040527344  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.77_04-2022.h5
+loss            1.308372
+accuracy        0.555944
+val_loss        1.765133
+val_accuracy    0.421053
+Name: 90, dtype: float64
+Guardado, con un loss del :  1.802762508392334  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.8_04-2022.h5
+loss            1.313842
+accuracy        0.576923
+val_loss        1.802763
+val_accuracy    0.442105
+Name: 98, dtype: float64
+Guardado, con un loss del :  1.7376906871795654  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.74_04-2022.h5
+loss            1.298070
+accuracy        0.580420
+val_loss        1.737691
+val_accuracy    0.442105
+Name: 94, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  47.36842215061188 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_47.37%_04-2022.h5
+loss            1.248452
+accuracy        0.601399
+val_loss        1.783289
+val_accuracy    0.473684
+Name: 106, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  46.315789222717285 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_46.32%_04-2022.h5
+loss            1.325788
+accuracy        0.527972
+val_loss        1.801005
+val_accuracy    0.463158
+Name: 96, dtype: float64
+Guardado, con un loss del :  1.7566319704055786  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.76_04-2022.h5
+loss            1.333882
+accuracy        0.552448
+val_loss        1.756632
+val_accuracy    0.421053
+Name: 100, dtype: float64
+Guardado, con un loss del :  1.81035315990448  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.81_04-2022.h5
+loss            1.322708
+accuracy        0.604895
+val_loss        1.810353
+val_accuracy    0.400000
+Name: 101, dtype: float64
+Guardado, con un loss del :  1.7322678565979004  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.73_04-2022.h5
+loss            1.115911
+accuracy        0.657343
+val_loss        1.732268
+val_accuracy    0.378947
+Name: 109, dtype: float64
+Guardado, con un loss del :  1.8223729133605957  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.82_04-2022.h5
+loss            1.403554
+accuracy        0.524476
+val_loss        1.822373
+val_accuracy    0.400000
+Name: 92, dtype: float64
+Guardado, con un loss del :  1.7247568368911743  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.72_04-2022.h5
+loss            1.237857
+accuracy        0.611888
+val_loss        1.724757
+val_accuracy    0.431579
+Name: 82, dtype: float64
+Guardado, con un loss del :  1.817137598991394  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.82_04-2022.h5
+loss            1.280714
+accuracy        0.569930
+val_loss        1.817138
+val_accuracy    0.378947
+Name: 93, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  47.36842215061188 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_47.37%_04-2022.h5
+loss            1.275922
+accuracy        0.562937
+val_loss        1.758437
+val_accuracy    0.473684
+Name: 120, dtype: float64
+Guardado, con un loss del :  1.8106216192245483  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.81_04-2022.h5
+loss            1.125933
+accuracy        0.643357
+val_loss        1.810622
+val_accuracy    0.410526
+Name: 102, dtype: float64
+Guardado, con un loss del :  1.779770016670227  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.78_04-2022.h5
+loss            1.118425
+accuracy        0.604895
+val_loss        1.779770
+val_accuracy    0.368421
+Name: 118, dtype: float64
+Guardado, con un loss del :  1.7728197574615479  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.77_04-2022.h5
+loss            1.461535
+accuracy        0.513986
+val_loss        1.772820
+val_accuracy    0.442105
+Name: 96, dtype: float64
+Guardado, con un loss del :  1.8356058597564697  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.84_04-2022.h5
+loss            1.241441
+accuracy        0.573427
+val_loss        1.835606
+val_accuracy    0.431579
+Name: 98, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  47.36842215061188 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_47.37%_04-2022.h5
+loss            1.392046
+accuracy        0.545455
+val_loss        1.772594
+val_accuracy    0.473684
+Name: 112, dtype: float64
+Guardado, con un loss del :  1.8581501245498657  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.86_04-2022.h5
+loss            1.426319
+accuracy        0.506993
+val_loss        1.858150
+val_accuracy    0.400000
+Name: 99, dtype: float64
+Guardado, con un loss del :  1.7575936317443848  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.76_04-2022.h5
+loss            1.345275
+accuracy        0.566434
+val_loss        1.757594
+val_accuracy    0.389474
+Name: 117, dtype: float64
+Guardado, con un loss del :  1.8296383619308472  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.83_04-2022.h5
+loss            1.335749
+accuracy        0.524476
+val_loss        1.829638
+val_accuracy    0.378947
+Name: 110, dtype: float64
+Guardado, con un loss del :  1.839802622795105  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.84_04-2022.h5
+loss            1.330989
+accuracy        0.527972
+val_loss        1.839803
+val_accuracy    0.389474
+Name: 85, dtype: float64
+Guardado, con un loss del :  1.837141990661621  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.84_04-2022.h5
+loss            1.434795
+accuracy        0.520979
+val_loss        1.837142
+val_accuracy    0.378947
+Name: 102, dtype: float64
+Guardado, con un loss del :  1.8509852886199951  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.85_04-2022.h5
+loss            1.304219
+accuracy        0.559441
+val_loss        1.850985
+val_accuracy    0.421053
+Name: 104, dtype: float64
+Guardado, con un loss del :  1.839300513267517  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.84_04-2022.h5
+loss            1.115973
+accuracy        0.646853
+val_loss        1.839301
+val_accuracy    0.421053
+Name: 96, dtype: float64
+Guardado, con un loss del :  1.7662090063095093  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.77_04-2022.h5
+loss            1.309468
+accuracy        0.545455
+val_loss        1.766209
+val_accuracy    0.378947
+Name: 124, dtype: float64
+Guardado, con un loss del :  1.8494211435317993  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.85_04-2022.h5
+loss            1.348246
+accuracy        0.552448
+val_loss        1.849421
+val_accuracy    0.400000
+Name: 101, dtype: float64
+Guardado, con un loss del :  1.8122975826263428  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.81_04-2022.h5
+loss            1.385807
+accuracy        0.562937
+val_loss        1.812298
+val_accuracy    0.421053
+Name: 84, dtype: float64
+Guardado, con un loss del :  1.792854905128479  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.79_04-2022.h5
+loss            1.400865
+accuracy        0.510490
+val_loss        1.792855
+val_accuracy    0.400000
+Name: 107, dtype: float64
+Guardado, con un loss del :  1.854687213897705  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.85_04-2022.h5
+loss            1.371156
+accuracy        0.545455
+val_loss        1.854687
+val_accuracy    0.410526
+Name: 89, dtype: float64
+Guardado, con un loss del :  1.7743196487426758  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.77_04-2022.h5
+loss            1.380902
+accuracy        0.566434
+val_loss        1.774320
+val_accuracy    0.378947
+
+____________________________________________________________________________________________
+Guardado, con una precision del :  47.36842215061188 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_47.37%_04-2022.h5
+loss            1.461941
+accuracy        0.513986
+val_loss        1.917006
+val_accuracy    0.473684
+Name: 74, dtype: float64
+Guardado, con un loss del :  1.7187094688415527  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.719_04-2022.h5
+loss            1.179430
+accuracy        0.594406
+val_loss        1.718709
+val_accuracy    0.400000
+Name: 125, dtype: float64
+Guardado, con un loss del :  1.672964334487915  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.673_04-2022.h5
+loss            1.085746
+accuracy        0.629371
+val_loss        1.672964
+val_accuracy    0.431579
+
+____________________________________________________________________________________________
+Guardado, con una precision del :  49.47368502616882 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_49.474%_04-2022.h5
+loss            1.141831
+accuracy        0.622378
+val_loss        1.751299
+val_accuracy    0.494737
+Name: 108, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  48.42105209827423 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_48.421%_04-2022.h5
+loss            1.292266
+accuracy        0.555944
+val_loss        1.839534
+val_accuracy    0.484211
+Name: 90, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  50.52631497383118 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_50.526%_04-2022.h5
+loss            1.058195
+accuracy        0.709790
+val_loss        1.797790
+val_accuracy    0.505263
+Name: 111, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  48.42105209827423 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_48.421%_04-2022.h5
+loss            1.365034
+accuracy        0.576923
+val_loss        1.816869
+val_accuracy    0.484211
+Name: 85, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  47.36842215061188 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_47.368%_04-2022.h5
+loss            1.205873
+accuracy        0.580420
+val_loss        1.805711
+val_accuracy    0.473684
+Name: 127, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  48.42105209827423 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_48.421%_04-2022.h5
+loss            1.138717
+accuracy        0.618881
+val_loss        1.831100
+val_accuracy    0.484211
+Name: 101, dtype: float64
+Guardado, con un loss del :  1.6422064304351807  , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Loss/PorDefecto_1.642_04-2022.h5
+loss            1.204578
+accuracy        0.583916
+val_loss        1.642206
+val_accuracy    0.431579
+Name: 131, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  50.52631497383118 % , guardado correctamente en la ruta:   src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_50.526%_04-2022.h5
+loss            1.161593
+accuracy        0.632867
+val_loss        1.801457
+val_accuracy    0.505263

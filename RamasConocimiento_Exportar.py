@@ -8,6 +8,7 @@ from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import ADASYN
+from datetime import datetime
 
 def printColumnValues(Data):
 
@@ -56,81 +57,139 @@ def TestModel(Data):
     Data = deleteAllOther(Data, carrerasSeleccionadas)
 
     X_train = Data
+    # ''' con validation
+    X_train = Data.sample(frac=0.75, random_state=200)
+    X_test = Data.drop(X_train.index)
+    y_test = separarCarreras(X_test.UltimaCarrera, carrerasSeleccionadas)
+    # '''
+    # Sin validation
+    # X_train = Data
 
+    y_train = separarCarreras(X_train.UltimaCarrera, carrerasSeleccionadas)
 
-    y_train = separarCarreras(X_train.UltimaCarrera)
+    # con validation
+    X_test.pop("UltimaCarrera")
+
 
     X_train.pop("UltimaCarrera")
 
 
     input = len(X_train.columns)
+    NumIterations = 300
+    for x in range(0, NumIterations):
 
-    model = keras.Sequential([
-        layers.Dense(75, input_shape=[input]),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        layers.Dense(5, activation='softmax'),
-    ])
+        model = keras.Sequential([
+            layers.Dense(20, input_shape=[input]),
+            layers.Activation('relu'),
+            layers.Dropout(0.3),
+            layers.BatchNormalization(),
+            layers.Dense(5, activation='softmax'),
+        ])
 
-    early_stopping = callbacks.EarlyStopping(
-        monitor='loss',
-        min_delta=0.001,
-        patience=20,
+        early_stopping = callbacks.EarlyStopping(
+            monitor='loss',
+            min_delta=0.001,
+            patience=20,
 
-    )
+        )
 
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(
-            learning_rate=0.001),
-        loss='categorical_crossentropy',
-        # sparse_categorical_crossentropy
-        metrics=['accuracy']
-    )
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(
+                learning_rate=0.001),
+            loss='categorical_crossentropy',
+            # sparse_categorical_crossentropy
+            metrics=['accuracy']
+        )
 
-    history = model.fit(
-        X_train, y_train,
-        batch_size=32,
-        epochs=500,
-        callbacks=[early_stopping],
-    )
+        history = model.fit(
+            X_train, y_train,
+            validation_data=(X_test, y_test),
+            batch_size=32,
+            epochs=500,
+            callbacks=[early_stopping],
+            verbose=0
+        )
 
-    history_df = pd.DataFrame(history.history)
+        history_df = pd.DataFrame(history.history)
 
+        '''
+        #model.save('CincoCategoriasModelo.h5')
+    
+    
+        plt.title("Training and validation loss results")
+        sns.lineplot(data=history_df['loss'], label="Training Loss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.show()
+        plt.title("Training and validation accuracy results")
+        sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+        plt.xlabel("Epochs")
+        plt.ylabel("Accuracy")
+        plt.show()
+    
+    
+        print(history_df.iloc[-1])
+        print()
+        print("GUARDADO CORRECTAMENTE")
+        print()
+        print()
+        print("____________________RESULTS__________________")
+        print()
+        print("Training Accuracy mean from ", history_df['accuracy'])
+        print("Training Loss mean from ", history_df['loss'])
+        
+        '''
 
-    model.save('CincoCategoriasModelo.h5')
+        if history_df['val_accuracy'].iloc[-1] > 0.62:
 
+            ruta = "src/ModelosBuenos/RamasConocimiento/Accuracy/PorDefecto_"
+            precision = float(history_df['val_accuracy'].iloc[-1]) * 100
+            ruta += str(round(float(precision), 3))
+            ruta += "%"
+            now = datetime.now()
+            dt_string = now.strftime("_%m-%Y")
+            ruta += dt_string
+            ruta += ".h5"
+            model.save(ruta)
+            print("____________________________________________________________________________________________")
+            print("Guardado, con una precision del : ", precision, "% , guardado correctamente en la ruta:  ", ruta)
+            print(history_df.iloc[-1])
+            plt.title("Training and validation loss results")
+            sns.lineplot(data=history_df['loss'], label="Training Loss")
+            sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.show()
+            plt.title("Training and validation accuracy results")
+            sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+            sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+            plt.xlabel("Epochs")
+            plt.ylabel("Accuracy")
+            plt.show()
 
-    plt.title("Training and validation loss results")
-    sns.lineplot(data=history_df['loss'], label="Training Loss")
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
-    plt.show()
-    plt.title("Training and validation accuracy results")
-    sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.show()
+        elif history_df['val_loss'].iloc[-1] < 1.09:
 
+            ruta = "src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_"
+            loss = float(history_df['val_loss'].iloc[-1])
+            ruta += str(round(float(loss), 3))
+            now = datetime.now()
+            dt_string = now.strftime("_%m-%Y")
+            ruta += dt_string
+            ruta += ".h5"
+            model.save(ruta)
+            print("____________________________________________________________________________________________")
+            print("Guardado, con un loss del : ", loss, " , guardado correctamente en la ruta:  ", ruta)
+            print(history_df.iloc[-1])
+            plt.title("Training and validation loss results")
+            sns.lineplot(data=history_df['loss'], label="Training Loss")
+            sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.show()
+            plt.title("Training and validation accuracy results")
+            sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+            sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+            plt.xlabel("Epochs")
+            plt.ylabel("Accuracy")
+            plt.show()
 
-    print(history_df.iloc[-1])
-    print()
-    print("GUARDADO CORRECTAMENTE")
-    print()
-    print()
-    print("____________________RESULTS__________________")
-    print()
-    print("Training Accuracy mean from ", history_df['accuracy'])
-    print("Training Loss mean from ", history_df['loss'])
-
-
-    #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
-
-
-'''
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
-
-    return score[1]
-'''

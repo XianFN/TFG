@@ -6,6 +6,9 @@ import altair as alt
 from PIL import Image
 from datetime import datetime
 
+import PorDefecto_Exportar
+import RamasConocimiento
+import RamasConocimiento_Exportar
 from Obsolete import Preprocess
 import PreprocessConNombresBien
 import Flexible
@@ -15,8 +18,8 @@ import PorDefecto
 def Train():
     #TODO CUIDADOOOO
     #Data = pd.read_csv('DataSet/DATATEST-2.csv')
-    Data = pd.read_csv('DataSet/DATATEST-ConNombresBien.csv')
-    #Data = pd.read_csv('DataSet/DATATEST_CincoCategorias.csv')
+    #Data = pd.read_csv('DataSet/DATATEST-ConNombresBien.csv')
+    Data = pd.read_csv('DataSet/DATATEST_CincoCategorias.csv')
 
     #Data = Preprocess.preprocessingDataset(Data)
     Data = PreprocessConNombresBien.preprocessingDataset(Data)
@@ -30,14 +33,19 @@ def Train():
     AllVal_Accuracy = 0.0
     AllVal_Loss = 0.0
 
-    NumIterations = 5
 
+
+    #PorDefecto_Exportar.TestModel(Data)
+    RamasConocimiento_Exportar.TestModel(Data)
+
+    '''
+    NumIterations = 5
     for x in range(0, NumIterations):
         #ret = Informatica.TestModel(Data)
         # ret = MasCarreras.TestModel(Data)
-        #ret = RamasConocimiento.TestModel(Data)
+        ret = RamasConocimiento.TestModel(Data)
         #ret = RamasConocimiento_Exportar.TestModel(Data)
-        ret = PorDefecto.TestModel(Data)
+        #ret = PorDefecto.TestModel(Data)
         #ret = PorDefecto_Exportar.TestModel(Data)
 
         AllLoss += ret['loss']
@@ -52,7 +60,7 @@ def Train():
     print("Training Loss mean from ", NumIterations, " iterations: ", AllLoss / NumIterations)
     print("Validation Accuracy mean from ", NumIterations, " iterations: ", AllVal_Accuracy / NumIterations)
     print("Validation Loss mean from ", NumIterations, " iterations: ", AllVal_Loss / NumIterations)
-
+    '''
 
 def show_predict_page():
 
@@ -112,7 +120,9 @@ def show_predict_page():
 
         container.image(image)
         container.text("")
-        container.subheader("Recomendador de carreras universitarias basado en Inteligencia Artificial\n\n\n")
+        container.markdown("<h1 style='text-align: center;'>Recomendador de carreras universitarias basado en Inteligencia Artificial</h1>", unsafe_allow_html=True)
+
+        container.subheader("\n\n\n")
         container.write(
             "Esta IA analiza los resultados que introduzcas a continuacion y predice que carreras se adaptan tus gustos y que porcentaje de afinidad."
             " \nDado que se trata de una predicción, los resultados puede que no sean exactos.")
@@ -676,6 +686,7 @@ def show_predict_page():
     st.text("")
     st.text("")
     st.caption("Trabajo de Fin de Grado de Ingeniería Informática. Desarrollado por Xián Filgueiras Nogueira")
+    st.caption("Tutora: Maite García Ordás")
 
 
 

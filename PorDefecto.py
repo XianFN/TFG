@@ -9,17 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import ADASYN
 
-def getMinAndMaxForReturn(history):
-
-#NOT USED
-    ret = []
-    ret['accuracy']= history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-    ret['accuracy'] = history['accuracy'].max()
-
-    return ret
-
 def printColumnValues(Data):
 
     for column in Data:
@@ -120,16 +109,13 @@ def TestModel(Data):
     input = len(X_train.columns)
 
     model = keras.Sequential([
-        layers.Dense(75, input_shape=[input]),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        layers.Dense(32),
+        layers.Dense(17, input_shape=[input]),
         layers.Activation('relu'),
         layers.Dropout(0.3),
         layers.BatchNormalization(),
         layers.Dense(12, activation='softmax'),
     ])
+
 
     early_stopping = callbacks.EarlyStopping(
         monitor='val_loss',
@@ -174,14 +160,7 @@ def TestModel(Data):
     plt.show()
 
 
+
     print(history_df.iloc[-1])
-    #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
     return history_df.iloc[-1]
 
-'''
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
-
-    return score[1]
-'''

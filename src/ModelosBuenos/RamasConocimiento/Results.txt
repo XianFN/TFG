@@ -1,0 +1,84 @@
+____________________________________________________________________________________________
+Guardado, con una precision del :  62.57309913635254 % , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Accuracy/PorDefecto_62.573%_04-2022.h5
+loss            0.983467
+accuracy        0.618677
+val_loss        1.018294
+val_accuracy    0.625731
+Name: 71, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.0353032350540161  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.035_04-2022.h5
+loss            0.866131
+accuracy        0.663424
+val_loss        1.035303
+val_accuracy    0.567251
+Name: 109, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.089459776878357  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.089_04-2022.h5
+loss            0.858624
+accuracy        0.661479
+val_loss        1.089460
+val_accuracy    0.608187
+Name: 101, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  63.15789222717285 % , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Accuracy/PorDefecto_63.158%_04-2022.h5
+loss            0.803446
+accuracy        0.682879
+val_loss        1.184781
+val_accuracy    0.631579
+Name: 152, dtype: float64
+____________________________________________________________________________________________
+Guardado, con una precision del :  64.91228342056274 % , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Accuracy/PorDefecto_64.912%_04-2022.h5
+loss            0.856738
+accuracy        0.665370
+val_loss        1.060034
+val_accuracy    0.649123
+Name: 119, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.0852138996124268  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.085_04-2022.h5
+loss            0.887684
+accuracy        0.651751
+val_loss        1.085214
+val_accuracy    0.619883
+Name: 116, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.0670069456100464  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.067_04-2022.h5
+loss            0.945157
+accuracy        0.603113
+val_loss        1.067007
+val_accuracy    0.602339
+Name: 89, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.042131781578064  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.042_04-2022.h5
+loss            0.859129
+accuracy        0.669261
+val_loss        1.042132
+val_accuracy    0.608187
+Name: 110, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.0184699296951294  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.018_04-2022.h5
+loss            0.871117
+accuracy        0.647860
+val_loss        1.018470
+val_accuracy    0.590643
+Name: 111, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.079943299293518  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.08_04-2022.h5
+loss            0.887171
+accuracy        0.645914
+val_loss        1.079943
+val_accuracy    0.555556
+Name: 100, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.058409571647644  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.058_04-2022.h5
+loss            0.777818
+accuracy        0.700389
+val_loss        1.058410
+val_accuracy    0.584795
+Name: 153, dtype: float64
+____________________________________________________________________________________________
+Guardado, con un loss del :  1.0799099206924438  , guardado correctamente en la ruta:   src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_1.08_04-2022.h5
+loss            0.810497
+accuracy        0.677043
+val_loss        1.079910
+val_accuracy    0.596491
+Name: 135, dtype: float64

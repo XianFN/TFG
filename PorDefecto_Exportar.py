@@ -8,6 +8,7 @@ from sklearn.preprocessing import Normalizer
 import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import ADASYN
+from datetime import datetime
 
 def getMinAndMaxForReturn(history):
 
@@ -69,112 +70,138 @@ def TestModel(Data):
 
     Data = deleteAllOther(Data, carrerasSeleccionadas)
 
-    X_train = Data
+    #''' con validation
+    X_train = Data.sample(frac=0.75, random_state=200)
+    X_test = Data.drop(X_train.index)
+    y_test = separarCarreras(X_test.UltimaCarrera, carrerasSeleccionadas)
+    #'''
+    # Sin validation
+    #X_train = Data
+
 
     y_train = separarCarreras(X_train.UltimaCarrera, carrerasSeleccionadas)
 
-    ''''
-    yprueba= y_train
-    yprueba = y_train.map(
-        {"Ciencias de la Actividad FÃ­sica y del Deporte": 1, "IngenierÃ­a InformÃ¡tica": 2, "BiologÃ­a": 3,
-         "Veterinaria": 4, "IngenierÃ­a ElectrÃ³nica": 5,
-         "Magisterio de EducaciÃ³n Primaria": 6, "Derecho": 7, "EnfermerÃ­a": 8,
-         "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as": 9, "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas": 10,
-         "BiotecnologÃ­a": 11, "IngenierÃ­a Aeroespacial": 12}).fillna(0)
-    '''
 
-
-
-
+    # con validation
+    X_test.pop("UltimaCarrera")
 
     X_train.pop("UltimaCarrera")
     print(X_train.shape)
     print(y_train.shape)
 
-    ''' TODO ADASYN
 
-    print(X_train.shape)
-    ada = ADASYN(random_state=42)
-    X_res, y_res = ada.fit_resample(X_train, yprueba)
-    print(X_res.shape)
-    print(y_res.shape)
-    y_res = y_res.map(
-        {1: "Ciencias de la Actividad FÃ­sica y del Deporte", 2: "IngenierÃ­a InformÃ¡tica", 3: "BiologÃ­a",
-         4: "Veterinaria", 5: "IngenierÃ­a ElectrÃ³nica",
-         6 : "Magisterio de EducaciÃ³n Primaria", 7: "Derecho", 8: "EnfermerÃ­a",
-         9 : "Lenguas Modernas - Lenguas ClÃ¡sicas - FilologÃ­as", 10 : "ADE - AdministraciÃ³n y DirecciÃ³n de Empresas",
-         11 : "BiotecnologÃ­a", 12 : "IngenierÃ­a Aeroespacial",
-         13 : "Ciencias de la Actividad FÃ­sica y del Deporte"}).fillna(0)
-
-    y_train = separarCarreras(y_res)
-    X_train = X_res
-
-
-    '''
 
     input = len(X_train.columns)
+    NumIterations = 300
+    for x in range(0, NumIterations):
+
+        model = keras.Sequential([
+            layers.Dense(17, input_shape=[input]),
+            layers.Activation('relu'),
+            layers.Dropout(0.3),
+            layers.BatchNormalization(),
+            layers.Dense(12, activation='softmax'),
+        ])
+
+        early_stopping = callbacks.EarlyStopping(
+            #monitor='loss',
+            monitor='val_loss',
+            min_delta=0.005,
+            patience=20,
+
+        )
+
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(
+                learning_rate=0.001),
+            loss='categorical_crossentropy',
+            # sparse_categorical_crossentropy
+            metrics=['accuracy']
+        )
+
+        history = model.fit(
+            X_train, y_train,
+            validation_data=(X_test, y_test),
+            batch_size=32,
+            epochs=300,
+            callbacks=[early_stopping],
+            verbose=0
+        )
+
+        history_df = pd.DataFrame(history.history)
 
 
-    model = keras.Sequential([
-        layers.Dense(75, input_shape=[input]),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        layers.Dense(32),
-        layers.Activation('relu'),
-        layers.Dropout(0.3),
-        layers.BatchNormalization(),
-        layers.Dense(12, activation='softmax'),
-    ])
 
-    early_stopping = callbacks.EarlyStopping(
-        monitor='loss',
-        min_delta=0.005,
-        patience=20,
+    #
+        '''
+        plt.title("Training and validation loss results")
+        sns.lineplot(data=history_df['loss'], label="Training Loss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.show()
+        plt.title("Training and validation accuracy results")
+        sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+        plt.xlabel("Epochs")
+        plt.ylabel("Accuracy")
+        plt.show()
 
-    )
-
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(
-            learning_rate=0.001),
-        loss='categorical_crossentropy',
-        # sparse_categorical_crossentropy
-        metrics=['accuracy']
-    )
-
-    history = model.fit(
-        X_train, y_train,
-        batch_size=32,
-        epochs=300,
-        callbacks=[early_stopping],
-    )
-
-    history_df = pd.DataFrame(history.history)
+        '''
 
 
 
-#
+        if history_df['val_accuracy'].iloc[-1] > 0.50:
 
-    plt.title("Training and validation loss results")
-    sns.lineplot(data=history_df['loss'], label="Training Loss")
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss")
-    plt.show()
-    plt.title("Training and validation accuracy results")
-    sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.show()
+            ruta = "src/ModelosBuenos/PorDefecto/Accuracy/PorDefecto_"
+            precision = float(history_df['val_accuracy'].iloc[-1]) * 100
+            ruta+= str(round(float(precision), 3))
+            ruta += "%"
+            now = datetime.now()
+            dt_string = now.strftime("_%m-%Y")
+            ruta += dt_string
+            ruta += ".h5"
+            model.save(ruta)
+            print("____________________________________________________________________________________________")
+            print("Guardado, con una precision del : ", precision, "% , guardado correctamente en la ruta:  ",ruta)
+            print(history_df.iloc[-1])
+            plt.title("Training and validation loss results")
+            sns.lineplot(data=history_df['loss'], label="Training Loss")
+            sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.show()
+            plt.title("Training and validation accuracy results")
+            sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+            sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+            plt.xlabel("Epochs")
+            plt.ylabel("Accuracy")
+            plt.show()
+
+        elif history_df['val_loss'].iloc[-1] < 1.67:
+
+            ruta = "src/ModelosBuenos/PorDefecto/Loss/PorDefecto_"
+            loss = float(history_df['val_loss'].iloc[-1])
+            ruta += str(round(float(loss), 3))
+            now = datetime.now()
+            dt_string = now.strftime("_%m-%Y")
+            ruta += dt_string
+            ruta += ".h5"
+            model.save(ruta)
+            print("Guardado, con un loss del : ", loss, " , guardado correctamente en la ruta:  ", ruta)
+            print(history_df.iloc[-1])
+            plt.title("Training and validation loss results")
+            sns.lineplot(data=history_df['loss'], label="Training Loss")
+            sns.lineplot(data=history_df['val_loss'], label="Validation Loss")
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.show()
+            plt.title("Training and validation accuracy results")
+            sns.lineplot(data=history_df['accuracy'], label="Training Accuracy")
+            sns.lineplot(data=history_df['val_accuracy'], label="Validation Accuracy")
+            plt.xlabel("Epochs")
+            plt.ylabel("Accuracy")
+            plt.show()
+
+       # print(history_df.iloc[-1])
 
 
-    print(history_df.iloc[-1])
-    #TODO preguntar, se deberia pillar el ultimo resultado, o los min. max
-    return history_df.iloc[-1]
 
-'''
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
-
-    return score[1]
-'''
