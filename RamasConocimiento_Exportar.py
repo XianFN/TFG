@@ -142,7 +142,7 @@ def TestModel(Data):
 
         if history_df['val_accuracy'].iloc[-1] > 0.62:
 
-            ruta = "src/ModelosBuenos/RamasConocimiento/Accuracy/PorDefecto_"
+            ruta = "src/ModelosBuenos/RamasConocimiento/Accuracy/RamasConocimiento_"
             precision = float(history_df['val_accuracy'].iloc[-1]) * 100
             ruta += str(round(float(precision), 3))
             ruta += "%"
@@ -169,7 +169,7 @@ def TestModel(Data):
 
         elif history_df['val_loss'].iloc[-1] < 1.09:
 
-            ruta = "src/ModelosBuenos/RamasConocimiento/Loss/PorDefecto_"
+            ruta = "src/ModelosBuenos/RamasConocimiento/Loss/RamasConocimiento_"
             loss = float(history_df['val_loss'].iloc[-1])
             ruta += str(round(float(loss), 3))
             now = datetime.now()

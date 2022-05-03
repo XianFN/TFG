@@ -1,3 +1,6 @@
+import os
+
+import numpy
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -352,7 +355,9 @@ def show_predict_page():
         datosPrecargados = st.sidebar.selectbox(
             'Quieres probar con datos precargados?',
             ('Por defecto', 'datosXian', 'datosIrene', 'datosZaira', 'datosJavi', 'datosMaite', 'datosJabe',
-             'datosMaria', 'datosPabloAntes', 'datosPabloAhora'))
+             'datosMaria', 'datosPabloAntes', 'datosPabloAhora', 'datos1', 'datos2', 'datos3', 'datos4'))
+        masModelos = st.sidebar.checkbox("Predecir con mas modelos")
+        pruebaNuevo = st.sidebar.checkbox("Nuevo modelo")
 
         if datosPrecargados != "Por defecto":
 
@@ -423,12 +428,36 @@ def show_predict_page():
 
             if option == 'Ramas de conocimiento':
 
-                model = load_model('CincoCategoriasModelo.h5')
-                classPredicted = model.predict(Data)
+                if pruebaNuevo:
+                    model = load_model('src/ModelosBuenos/RamasConocimiento/Mejor/RamasConocimiento_64.912%_04-2022.h5')
+                    classPredicted = model.predict(Data)
+                    classPredicted = classPredicted * 100
+                elif masModelos:
+                    directory = 'src/ModelosBuenos/RamasConocimiento/Mejores/'
+                    counter = 0
+                    results = np.ndarray(shape=(1, 5), dtype="float32", order='F')
+
+                    for filename in os.scandir(directory):
+                        if filename.is_file():
+                            counter = counter + 1
+                            print(filename.path)
+                            model = load_model(filename.path)
+                            results[0] += (model.predict(Data)[0] * 100)
+                            print(results)
+
+                    print(counter)
+                    print(results)
+                    classPredicted = results / counter
+                    print(classPredicted)
+                else:
+                    model = load_model('CincoCategoriasModelo.h5')
+                    classPredicted = model.predict(Data)
+                    classPredicted = classPredicted * 100
+
                 #print(classPredicted)
                 #print("Predict", classPredicted[0])
 
-                classPredicted = classPredicted * 100
+
 
                 carreras = ["Artes y Humanidades", "Ciencias", "Ciencias de la Salud", "Ciencias Sociales y Jurídicas",
                             "Ingeniería y Arquitectura"]
@@ -593,12 +622,40 @@ def show_predict_page():
 
 
             else:
-                model = load_model('TodasModelo.h5')
-                classPredicted = model.predict(Data)
+                if pruebaNuevo:
+                    model = load_model('src/ModelosBuenos/PorDefecto/Mejor/PorDefecto_50.526%_04-2022.h5')
+                    classPredicted = model.predict(Data)
+                    classPredicted = classPredicted * 100
+
+                elif masModelos:
+                    directory = 'src/ModelosBuenos/PorDefecto/Mejores/'
+                    counter = 0
+                    results = np.ndarray(shape=(1, 12), dtype="float32", order='F')
+                      #  numpy.array([0,0,0,0,0,0,0,0,0,0,0,0], dtype="float32")
+                    #
+                    for filename in os.scandir(directory):
+                        if filename.is_file():
+                            counter = counter + 1
+                            print(filename.path)
+                            model = load_model(filename.path)
+                            results[0] += (model.predict(Data)[0] *100)
+                            print(results)
+
+                    print(counter)
+                    print(results)
+                    classPredicted = results / counter
+                    print(classPredicted)
+
+
+                else:
+                    model = load_model('TodasModelo.h5')
+                    classPredicted = model.predict(Data)
+                    classPredicted = classPredicted * 100
                 #print(classPredicted)
                 #print("Predict", classPredicted[0])
+                print(type(classPredicted))
+                print(numpy.shape(classPredicted))
 
-                classPredicted = classPredicted * 100
 
 
                 carreras = ["Ingeniería Informática", "Biología", "Veterinaria", "Ingeniería Eléctrica",
@@ -697,7 +754,7 @@ def changeDtype(Data):
 
 
 
-#show_predict_page()
-Train()
+show_predict_page()
+#Train()
 
 
