@@ -17,7 +17,7 @@ def printColumnValues(Data):
 def changeDtype(Data):
 
     for column in Data:
-        Data[column] = Data[column].astype(np.float32)
+            Data[column] = Data[column].astype(np.float32)
 
 
 
